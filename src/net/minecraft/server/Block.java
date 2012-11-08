@@ -966,55 +966,64 @@ public class Block implements BlockProxy {
         return false;
     }
 
-    public boolean canSustainPlant(World var1, int var2, int var3, int var4, ForgeDirection var5, IPlantable var6)
-    {
-        int var7 = var6.getPlantID(var1, var2, var3 + 1, var4);
-        EnumPlantType var8 = var6.getPlantType(var1, var2, var3 + 1, var4);
-
-        if (var7 == CACTUS.id && this.id == CACTUS.id)
+        /**
+         * Determines if this block can support the passed in plant, allowing it to be planted and grow.
+         * Some examples:
+         *   Reeds check if its a reed, or if its sand/dirt/grass and adjacent to water
+         *   Cacti checks if its a cacti, or if its sand
+         *   Nether types check for soul sand
+         *   Crops check for tilled soil
+         *   Caves check if it's a colid surface
+         *   Plains check if its grass or dirt
+         *   Water check if its still water
+         *   
+         * @param world The current world
+         * @param x X Position
+         * @param y Y Position
+         * @param z Z position
+         * @param direction The direction relative to the given position the plant wants to be, typically its UP
+         * @param plant The plant that wants to check
+         * @return True to allow the plant to be planted/stay.
+         */
+        public boolean canSustainPlant(World world, int x, int y, int z, ForgeDirection direction, IPlantable plant)
         {
-            return true;
-        }
-        else if (var7 == SUGAR_CANE_BLOCK.id && this.id == SUGAR_CANE_BLOCK.id)
-        {
-            return true;
-        }
-        else if (var6 instanceof BlockFlower && ((BlockFlower)var6).d_(this.id))
-        {
-            return true;
-        }
-        else
-        {
-            switch (var8.ordinal())
+            int plantID = plant.getPlantID(world, x, y + 1, z);
+            EnumPlantType plantType = plant.getPlantType(world, x, y + 1, z);
+    
+            if (plantID == CACTUS.id && id == CACTUS.id)
             {
-                case 1:
-                    return this.id == SAND.id;
-
-                case 2:
-                    return this.id == SOUL_SAND.id;
-
-                case 3:
-                    return this.id == SOIL.id;
-
-                case 4:
-                    return this.isBlockSolidOnSide(var1, var2, var3, var4, ForgeDirection.UP);
-
-                case 5:
-                    return this.id == GRASS.id || this.id == DIRT.id;
-
-                case 6:
-                    return var1.getMaterial(var2, var3, var4) == Material.WATER && var1.getData(var2, var3, var4) == 0;
-
-                case 7:
-                    boolean var9 = this.id == GRASS.id || this.id == DIRT.id || this.id == SAND.id;
-                    boolean var10 = var1.getMaterial(var2 - 1, var3 - 1, var4) == Material.WATER || var1.getMaterial(var2 + 1, var3 - 1, var4) == Material.WATER || var1.getMaterial(var2, var3 - 1, var4 - 1) == Material.WATER || var1.getMaterial(var2, var3 - 1, var4 + 1) == Material.WATER;
-                    return var9 && var10;
-
-                default:
-                    return false;
+                return true;
             }
+    
+            if (plantID == SUGAR_CANE_BLOCK.id && id == SUGAR_CANE_BLOCK.id)
+            {
+                return true;
+            }
+    
+            if (plant instanceof BlockFlower && ((BlockFlower)plant).d_(id))
+            {
+                return true;
+            }
+    
+            switch (plantType)
+            {
+                case Desert: return id == SAND.id;
+                case Nether: return id == SOUL_SAND.id;
+                case Crop:   return id == SOIL.id;
+                case Cave:   return isBlockSolidOnSide(world, x, y, z, ForgeDirection.UP);
+                case Plains: return id == GRASS.id || id == DIRT.id;
+                case Water:  return world.getMaterial(x, y, z) == Material.WATER && world.getData(x, y, z) == 0;
+                case Beach:
+                    boolean isBeach = (id == Block.GRASS.id || id == Block.DIRT.id || id == Block.SAND.id);
+                    boolean hasWater = (world.getMaterial(x - 1, y - 1, z    ) == Material.WATER || 
+                                        world.getMaterial(x + 1, y - 1, z    ) == Material.WATER || 
+                                        world.getMaterial(x,     y - 1, z - 1) == Material.WATER ||
+                                        world.getMaterial(x,     y - 1, z + 1) == Material.WATER);
+                    return isBeach && hasWater;
+            }
+    
+            return false;
         }
-    }
 
     public boolean isFertile(World var1, int var2, int var3, int var4)
     {
