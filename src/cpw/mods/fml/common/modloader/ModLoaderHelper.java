@@ -2,6 +2,7 @@ package cpw.mods.fml.common.modloader;
 
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ICraftingHandler;
 import cpw.mods.fml.common.IDispenserHandler;
 import cpw.mods.fml.common.IFuelHandler;
@@ -33,54 +34,70 @@ public class ModLoaderHelper
 
     public static void updateStandardTicks(BaseModProxy var0, boolean var1, boolean var2)
     {
-        ModLoaderModContainer var3 = (ModLoaderModContainer)Loader.instance().activeModContainer();
-        BaseModTicker var4 = var3.getGameTickHandler();
-        EnumSet var5 = var4.ticks();
+        ModLoaderModContainer var3 = (ModLoaderModContainer)Loader.instance().getReversedModObjectList().get(var0);
 
-        if (var1 && !var2)
+        if (var3 == null)
         {
-            var5.add(TickType.RENDER);
+            FMLLog.severe("Attempted to register ModLoader ticking for invalid BaseMod %s", new Object[] {var0});
         }
         else
         {
-            var5.remove(TickType.RENDER);
-        }
+            BaseModTicker var4 = var3.getGameTickHandler();
+            EnumSet var5 = var4.ticks();
 
-        if (var1 && (var2 || FMLCommonHandler.instance().getSide().isServer()))
-        {
-            var5.add(TickType.CLIENT);
-            var5.add(TickType.WORLDLOAD);
-        }
-        else
-        {
-            var5.remove(TickType.CLIENT);
-            var5.remove(TickType.WORLDLOAD);
+            if (var1 && !var2)
+            {
+                var5.add(TickType.RENDER);
+            }
+            else
+            {
+                var5.remove(TickType.RENDER);
+            }
+
+            if (var1 && (var2 || FMLCommonHandler.instance().getSide().isServer()))
+            {
+                var5.add(TickType.CLIENT);
+                var5.add(TickType.WORLDLOAD);
+            }
+            else
+            {
+                var5.remove(TickType.CLIENT);
+                var5.remove(TickType.WORLDLOAD);
+            }
         }
     }
 
     public static void updateGUITicks(BaseModProxy var0, boolean var1, boolean var2)
     {
-        ModLoaderModContainer var3 = (ModLoaderModContainer)Loader.instance().activeModContainer();
-        EnumSet var4 = var3.getGUITickHandler().ticks();
+        ModLoaderModContainer var3 = (ModLoaderModContainer)Loader.instance().getReversedModObjectList().get(var0);
 
-        if (var1 && !var2)
+        if (var3 == null)
         {
-            var4.add(TickType.RENDER);
+            FMLLog.severe("Attempted to register ModLoader ticking for invalid BaseMod %s", new Object[] {var0});
         }
         else
         {
-            var4.remove(TickType.RENDER);
-        }
+            EnumSet var4 = var3.getGUITickHandler().ticks();
 
-        if (var1 && var2)
-        {
-            var4.add(TickType.CLIENT);
-            var4.add(TickType.WORLDLOAD);
-        }
-        else
-        {
-            var4.remove(TickType.CLIENT);
-            var4.remove(TickType.WORLDLOAD);
+            if (var1 && !var2)
+            {
+                var4.add(TickType.RENDER);
+            }
+            else
+            {
+                var4.remove(TickType.RENDER);
+            }
+
+            if (var1 && var2)
+            {
+                var4.add(TickType.CLIENT);
+                var4.add(TickType.WORLDLOAD);
+            }
+            else
+            {
+                var4.remove(TickType.CLIENT);
+                var4.remove(TickType.WORLDLOAD);
+            }
         }
     }
 

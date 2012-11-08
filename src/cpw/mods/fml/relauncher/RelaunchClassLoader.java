@@ -24,6 +24,7 @@ public class RelaunchClassLoader extends URLClassLoader
     private ClassLoader parent;
     private List transformers;
     private Map cachedClasses;
+    private Set invalidClasses;
     private Set classLoaderExceptions = new HashSet();
     private Set transformerExceptions = new HashSet();
 
@@ -33,6 +34,7 @@ public class RelaunchClassLoader extends URLClassLoader
         this.sources = new ArrayList(Arrays.asList(var1));
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap(1000);
+        this.invalidClasses = new HashSet(1000);
         this.transformers = new ArrayList(2);
         Thread.currentThread().setContextClassLoader(this);
         this.addClassLoaderExclusion("java.");
@@ -60,78 +62,94 @@ public class RelaunchClassLoader extends URLClassLoader
 
     public Class findClass(String var1) throws ClassNotFoundException
     {
-        if (excludedPackages.length != 0)
+        if (this.invalidClasses.contains(var1))
         {
-            this.classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
-            excludedPackages = new String[0];
+            throw new ClassNotFoundException(var1);
         }
-
-        if (transformerExclusions.length != 0)
+        else
         {
-            this.transformerExceptions.addAll(Arrays.asList(transformerExclusions));
-            transformerExclusions = new String[0];
-        }
-
-        Iterator var2 = this.classLoaderExceptions.iterator();
-        String var3;
-
-        do
-        {
-            if (!var2.hasNext())
+            if (excludedPackages.length != 0)
             {
-                if (this.cachedClasses.containsKey(var1))
-                {
-                    return (Class)this.cachedClasses.get(var1);
-                }
-
-                var2 = this.transformerExceptions.iterator();
-
-                do
-                {
-                    if (!var2.hasNext())
-                    {
-                        try
-                        {
-                            int var7 = var1.lastIndexOf(46);
-
-                            if (var7 > -1)
-                            {
-                                var3 = var1.substring(0, var7);
-
-                                if (this.getPackage(var3) == null)
-                                {
-                                    this.definePackage(var3, (String)null, (String)null, (String)null, (String)null, (String)null, (String)null, (URL)null);
-                                }
-                            }
-
-                            byte[] var8 = this.getClassBytes(var1);
-                            byte[] var9 = this.runTransformers(var1, var8);
-                            Class var5 = this.defineClass(var1, var9, 0, var9.length);
-                            this.cachedClasses.put(var1, var5);
-                            return var5;
-                        }
-                        catch (Throwable var6)
-                        {
-                            throw new ClassNotFoundException(var1, var6);
-                        }
-                    }
-
-                    var3 = (String)var2.next();
-                }
-                while (!var1.startsWith(var3));
-
-                Class var4 = super.findClass(var1);
-                this.cachedClasses.put(var1, var4);
-                return var4;
+                this.classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
+                excludedPackages = new String[0];
             }
 
-            var3 = (String)var2.next();
+            if (transformerExclusions.length != 0)
+            {
+                this.transformerExceptions.addAll(Arrays.asList(transformerExclusions));
+                transformerExclusions = new String[0];
+            }
+
+            Iterator var2 = this.classLoaderExceptions.iterator();
+            String var3;
+
+            do
+            {
+                if (!var2.hasNext())
+                {
+                    if (this.cachedClasses.containsKey(var1))
+                    {
+                        return (Class)this.cachedClasses.get(var1);
+                    }
+
+                    var2 = this.transformerExceptions.iterator();
+
+                    do
+                    {
+                        if (!var2.hasNext())
+                        {
+                            try
+                            {
+                                int var8 = var1.lastIndexOf(46);
+
+                                if (var8 > -1)
+                                {
+                                    var3 = var1.substring(0, var8);
+
+                                    if (this.getPackage(var3) == null)
+                                    {
+                                        this.definePackage(var3, (String)null, (String)null, (String)null, (String)null, (String)null, (String)null, (URL)null);
+                                    }
+                                }
+
+                                byte[] var9 = this.getClassBytes(var1);
+                                byte[] var10 = this.runTransformers(var1, var9);
+                                Class var5 = this.defineClass(var1, var10, 0, var10.length);
+                                this.cachedClasses.put(var1, var5);
+                                return var5;
+                            }
+                            catch (Throwable var7)
+                            {
+                                this.invalidClasses.add(var1);
+                                throw new ClassNotFoundException(var1, var7);
+                            }
+                        }
+
+                        var3 = (String)var2.next();
+                    }
+                    while (!var1.startsWith(var3));
+
+                    try
+                    {
+                        Class var4 = super.findClass(var1);
+                        this.cachedClasses.put(var1, var4);
+                        return var4;
+                    }
+                    catch (ClassNotFoundException var6)
+                    {
+                        this.invalidClasses.add(var1);
+                        throw var6;
+                    }
+                }
+
+                var3 = (String)var2.next();
+            }
+            while (!var1.startsWith(var3));
+
+            return this.parent.loadClass(var1);
         }
-        while (!var1.startsWith(var3));
-
-        return this.parent.loadClass(var1);
     }
-
+   
     public byte[] getClassBytes(String var1) throws IOException
     {
         InputStream var2 = null;

@@ -22,4 +22,6 @@ boolean useMetadata() default false;
 String acceptedMinecraftVersions() default "";
 
 String bukkitPlugin() default "";
+
+String modExclusionList() default "";
 }

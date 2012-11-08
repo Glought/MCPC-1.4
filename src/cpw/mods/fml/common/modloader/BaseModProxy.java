@@ -51,8 +51,6 @@ public interface BaseModProxy
 
     void onItemPickup(EntityHuman var1, ItemStack var2);
 
-    int dispenseEntity(World var1, ItemStack var2, Random var3, int var4, int var5, int var6, int var7, int var8, double var9, double var11, double var13);
-
     void serverCustomPayload(NetServerHandler var1, Packet250CustomPayload var2);
 
     void serverChat(NetServerHandler var1, String var2);

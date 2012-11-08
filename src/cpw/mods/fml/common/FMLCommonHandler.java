@@ -194,7 +194,8 @@ public class FMLCommonHandler
                 var1.add(var2);
             }
 
-            var1.addAll(this.sidedDelegate.getAdditionalBrandingInformation());
+            if (this.sidedDelegate != null)
+            	var1.addAll(this.sidedDelegate.getAdditionalBrandingInformation());
 
             try
             {
