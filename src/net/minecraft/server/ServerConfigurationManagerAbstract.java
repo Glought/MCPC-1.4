@@ -425,6 +425,11 @@ public abstract class ServerConfigurationManagerAbstract {
 
         return entityplayer1;
     }
+    
+    public void transferPlayerToDimension(EntityPlayer var1, int var2, PortalTravelAgent var3)
+    {
+    	changeDimension(var1, var2);
+    }
 
  // TODO: didn't implement forge version
     public void changeDimension(EntityPlayer entityplayer, int i) {
@@ -496,6 +501,11 @@ public abstract class ServerConfigurationManagerAbstract {
         // CraftBukkit end
         
         GameRegistry.onPlayerChangedDimension(entityplayer);
+    }
+    
+    public void transferEntityToWorld(Entity var1, int var2, WorldServer var3, WorldServer var4, PortalTravelAgent var5)
+    {
+    	a(var1, var2, var3, var4);
     }
 
     // TODO: didn't implement forge version

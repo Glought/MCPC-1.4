@@ -5,30 +5,30 @@ public class ForgeVersion
     public static final int majorVersion = 6;
     public static final int minorVersion = 0;
     public static final int revisionVersion = 1;
-    public static final int buildVersion = 341;
+    public static final int buildVersion = 355;
 
     public static int getMajorVersion()
     {
-        return 6;
+        return majorVersion;
     }
 
     public static int getMinorVersion()
     {
-        return 0;
+        return minorVersion;
     }
 
     public static int getRevisionVersion()
     {
-        return 1;
+        return revisionVersion;
     }
 
     public static int getBuildVersion()
     {
-        return 341;
+        return buildVersion;
     }
 
     public static String getVersion()
     {
-        return String.format("%d.%d.%d.%d", new Object[] {Integer.valueOf(6), Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(341)});
+        return String.format("%d.%d.%d.%d", new Object[] {Integer.valueOf(getMajorVersion()), Integer.valueOf(getMinorVersion()), Integer.valueOf(getRevisionVersion()), Integer.valueOf(getBuildVersion())});
     }
 }

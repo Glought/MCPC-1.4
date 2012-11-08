@@ -38,6 +38,11 @@ public class ModLoaderHelper
 
         if (var3 == null)
         {
+            var3 = (ModLoaderModContainer)Loader.instance().activeModContainer();
+        }
+
+        if (var3 == null)
+        {
             FMLLog.severe("Attempted to register ModLoader ticking for invalid BaseMod %s", new Object[] {var0});
         }
         else
@@ -70,6 +75,11 @@ public class ModLoaderHelper
     public static void updateGUITicks(BaseModProxy var0, boolean var1, boolean var2)
     {
         ModLoaderModContainer var3 = (ModLoaderModContainer)Loader.instance().getReversedModObjectList().get(var0);
+
+        if (var3 == null)
+        {
+            var3 = (ModLoaderModContainer)Loader.instance().activeModContainer();
+        }
 
         if (var3 == null)
         {

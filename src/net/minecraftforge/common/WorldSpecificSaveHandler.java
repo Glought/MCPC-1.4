@@ -97,7 +97,6 @@ public class WorldSpecificSaveHandler implements IDataManager
      */
     public File getDataFile(String var1)
     {
-        System.out.println(new File(this.dataDir, var1 + ".dat"));
         return new File(this.dataDir, var1 + ".dat");
     }
 

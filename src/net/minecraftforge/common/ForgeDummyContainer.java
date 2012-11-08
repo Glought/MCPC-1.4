@@ -13,6 +13,8 @@ import java.util.Map;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.WorldData;
 import net.minecraft.server.WorldNBTStorage;
+import cpw.mods.fml.common.Loader;
+import java.io.File;
 
 public class ForgeDummyContainer extends DummyModContainer implements WorldAccessContainer
 {
@@ -22,7 +24,7 @@ public class ForgeDummyContainer extends DummyModContainer implements WorldAcces
         ModMetadata var1 = this.getMetadata();
         var1.modId = "Forge";
         var1.name = "Minecraft Forge";
-        var1.version = String.format("%d.%d.%d.%d", new Object[] {Integer.valueOf(6), Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(341)});
+        var1.version = ForgeVersion.getVersion();
         var1.credits = "Made possible with help from many people";
         var1.authorList = Arrays.asList(new String[] {"LexManos", "Eloraam", "Spacetoad"});
         var1.description = "Minecraft Forge is a common open source API allowing a broad range of mods to work cooperatively together. It allows many mods to be created without them editing the main Minecraft code.";
@@ -30,8 +32,22 @@ public class ForgeDummyContainer extends DummyModContainer implements WorldAcces
         var1.updateUrl = "http://MinecraftForge.net/forum/index.php/topic,5.0.html";
         var1.screenshots = new String[0];
         var1.logoFile = "/forge_logo.png";
-    }
+        Configuration var2 = new Configuration(new File(Loader.instance().getConfigDir(), "forge.cfg"));
 
+        if (!var2.isChild)
+        {
+            var2.load();
+            Property var3 = var2.get("general", "enableGlobalConfig", false);
+
+            if (var3.getBoolean(false))
+            {
+                Configuration.enableGlobalConfig();
+            }
+
+            var2.save();
+        }
+    }
+    
     public boolean registerBus(EventBus var1, LoadController var2)
     {
         var1.register(this);

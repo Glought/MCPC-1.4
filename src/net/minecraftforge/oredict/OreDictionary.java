@@ -16,6 +16,42 @@ public class OreDictionary
     private static HashMap oreIDs = new HashMap();
     private static HashMap oreStacks = new HashMap();
 
+    public static void initVanillaEntries()
+    {
+        registerOre("woodLog", new ItemStack(Block.LOG, 1, 0));
+        registerOre("woodLog", new ItemStack(Block.LOG, 1, 1));
+        registerOre("woodLog", new ItemStack(Block.LOG, 1, 2));
+        registerOre("woodLog", new ItemStack(Block.LOG, 1, 3));
+        registerOre("woodPlank", new ItemStack(Block.WOOD, 1, 0));
+        registerOre("woodPlank", new ItemStack(Block.WOOD, 1, 1));
+        registerOre("woodPlank", new ItemStack(Block.WOOD, 1, 2));
+        registerOre("woodPlank", new ItemStack(Block.WOOD, 1, 3));
+        registerOre("woodSlab", new ItemStack(Block.WOOD_STEP, 1, 0));
+        registerOre("woodSlab", new ItemStack(Block.WOOD_STEP, 1, 1));
+        registerOre("woodSlab", new ItemStack(Block.WOOD_STEP, 1, 2));
+        registerOre("woodSlab", new ItemStack(Block.WOOD_STEP, 1, 3));
+        registerOre("woodStair", Block.WOOD_STAIRS);
+        registerOre("woodStair", Block.BIRCH_WOOD_STAIRS);
+        registerOre("woodStair", Block.JUNGLE_WOOD_STAIRS);
+        registerOre("woodStair", Block.SPRUCE_WOOD_STAIRS);
+        registerOre("dyeBlack", new ItemStack(Item.INK_SACK, 1, 0));
+        registerOre("dyeRed", new ItemStack(Item.INK_SACK, 1, 1));
+        registerOre("dyeGreen", new ItemStack(Item.INK_SACK, 1, 2));
+        registerOre("dyeBrown", new ItemStack(Item.INK_SACK, 1, 3));
+        registerOre("dyeBlue", new ItemStack(Item.INK_SACK, 1, 4));
+        registerOre("dyePurple", new ItemStack(Item.INK_SACK, 1, 5));
+        registerOre("dyeCyan", new ItemStack(Item.INK_SACK, 1, 6));
+        registerOre("dyeLightGrey", new ItemStack(Item.INK_SACK, 1, 7));
+        registerOre("dyeGrey", new ItemStack(Item.INK_SACK, 1, 8));
+        registerOre("dyePink", new ItemStack(Item.INK_SACK, 1, 9));
+        registerOre("dyeLime", new ItemStack(Item.INK_SACK, 1, 10));
+        registerOre("dyeYellow", new ItemStack(Item.INK_SACK, 1, 11));
+        registerOre("dyeLightBlue", new ItemStack(Item.INK_SACK, 1, 12));
+        registerOre("dyeMagenta", new ItemStack(Item.INK_SACK, 1, 13));
+        registerOre("dyeOrange", new ItemStack(Item.INK_SACK, 1, 14));
+        registerOre("dyeWhite", new ItemStack(Item.INK_SACK, 1, 15));
+    }
+    
     public static int getOreID(String var0)
     {
         Integer var1 = (Integer)oreIDs.get(var0);
@@ -108,5 +144,10 @@ public class OreDictionary
         var2 = var2.cloneItemStack();
         var3.add(var2);
         MinecraftForge.EVENT_BUS.post(new OreDictionary$OreRegisterEvent(var0, var2));
+    }
+    
+    static
+    {
+        initVanillaEntries();
     }
 }

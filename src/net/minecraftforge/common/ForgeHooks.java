@@ -251,7 +251,7 @@ public class ForgeHooks
             {
                 ItemStack var9 = var1.inventory.getItem(var5);
 
-                if (var9 != null && var9.doMaterialsMatch(var3))
+                if (var9 != null && var9.doMaterialsMatch(var3) && ItemStack.equals(var9, var3))
                 {
                     var1.inventory.itemInHandIndex = var5;
                     return true;

@@ -3,6 +3,8 @@ package net.minecraftforge.common;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.server.Block;
 import net.minecraft.server.Item;
 import net.minecraftforge.common.Configuration$UnicodeInputStreamReader;
@@ -34,19 +38,50 @@ public class Configuration
     public static final String CATEGORY_ITEM = "item";
     public static final String ALLOWED_CHARS = "._-";
     public static final String DEFAULT_ENCODING = "UTF-8";
+    private static final Pattern CONFIG_START = Pattern.compile("START: \"([^\\\"]+)\"");
+    private static final Pattern CONFIG_END = Pattern.compile("END: \"([^\\\"]+)\"");
     private static final CharMatcher allowedProperties = CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf("._-"));
+    private static Configuration PARENT = null;
     File file;
     public Map categories;
+    private Map children;
     private Map customCategoryComments;
     private boolean caseSensitiveCustomCategories;
     public String defaultEncoding;
+    private String fileName;
+    public boolean isChild;
+
+    public Configuration()
+    {
+        this.categories = new TreeMap();
+        this.children = new TreeMap();
+        this.customCategoryComments = Maps.newHashMap();
+        this.defaultEncoding = "UTF-8";
+        this.fileName = null;
+        this.isChild = false;
+    }
 
     public Configuration(File var1)
     {
         this.categories = new TreeMap();
+        this.children = new TreeMap();
         this.customCategoryComments = Maps.newHashMap();
         this.defaultEncoding = "UTF-8";
+        this.fileName = null;
+        this.isChild = false;
         this.file = var1;
+        String var2 = ((File)((File)FMLInjectionData.data()[6])).getAbsolutePath().replace(File.separatorChar, '/').replace("/.", "");
+        String var3 = var1.getAbsolutePath().replace(File.separatorChar, '/').replace("/./", "/").replace(var2, "");
+
+        if (PARENT != null)
+        {
+            PARENT.setChild(var3, this);
+            this.isChild = true;
+        }
+        else
+        {
+            this.load();
+        }
     }
 
     public Configuration(File var1, boolean var2)
@@ -199,207 +234,258 @@ public class Configuration
         return var3 != null && var3.get(var2) != null;
     }
 
-    public void load()
+  public void load()
     {
-        BufferedReader var1 = null;
-
-        try
+        if (PARENT == null || PARENT == this)
         {
-            if (this.file.getParentFile() != null)
-            {
-                this.file.getParentFile().mkdirs();
-            }
+            BufferedReader var1 = null;
 
-            if (this.file.exists() || this.file.createNewFile())
+            try
             {
+                if (this.file.getParentFile() != null)
+                {
+                    this.file.getParentFile().mkdirs();
+                }
+
+                if (!this.file.exists() && !this.file.createNewFile())
+                {
+                    return;
+                }
+
                 if (this.file.canRead())
                 {
                     Configuration$UnicodeInputStreamReader var2 = new Configuration$UnicodeInputStreamReader(new FileInputStream(this.file), this.defaultEncoding);
                     this.defaultEncoding = var2.getEncoding();
                     var1 = new BufferedReader(var2);
                     Object var4 = null;
-                    boolean var8;
 
-                    do
+                    while (true)
                     {
                         String var3 = var1.readLine();
 
                         if (var3 == null)
                         {
-                            return;
+                            break;
                         }
 
-                        int var5 = -1;
-                        int var6 = -1;
-                        boolean var7 = false;
-                        var8 = false;
+                        Matcher var5 = CONFIG_START.matcher(var3);
+                        Matcher var6 = CONFIG_END.matcher(var3);
 
-                        for (int var9 = 0; var9 < var3.length() && !var7; ++var9)
+                        if (var5.matches())
                         {
-                            if (!Character.isLetterOrDigit(var3.charAt(var9)) && "._-".indexOf(var3.charAt(var9)) == -1 && (!var8 || var3.charAt(var9) == 34))
+                            this.fileName = var5.group(1);
+                            this.categories = new TreeMap();
+                            this.customCategoryComments = Maps.newHashMap();
+                        }
+                        else if (var6.matches())
+                        {
+                            this.fileName = var6.group(1);
+                            Configuration var26 = new Configuration();
+                            var26.categories = this.categories;
+                            var26.customCategoryComments = this.customCategoryComments;
+                            this.children.put(this.fileName, var26);
+                        }
+                        else
+                        {
+                            int var7 = -1;
+                            int var8 = -1;
+                            boolean var9 = false;
+                            boolean var10 = false;
+
+                            for (int var11 = 0; var11 < var3.length() && !var9; ++var11)
                             {
-                                if (!Character.isWhitespace(var3.charAt(var9)))
+                                if (!Character.isLetterOrDigit(var3.charAt(var11)) && "._-".indexOf(var3.charAt(var11)) == -1 && (!var10 || var3.charAt(var11) == 34))
                                 {
-                                    switch (var3.charAt(var9))
+                                    if (!Character.isWhitespace(var3.charAt(var11)))
                                     {
-                                        case 34:
-                                            if (var8)
-                                            {
-                                                var8 = false;
-                                            }
+                                        switch (var3.charAt(var11))
+                                        {
+                                            case 34:
+                                                if (var10)
+                                                {
+                                                    var10 = false;
+                                                }
 
-                                            if (!var8 && var5 == -1)
-                                            {
-                                                var8 = true;
-                                            }
+                                                if (!var10 && var7 == -1)
+                                                {
+                                                    var10 = true;
+                                                }
 
-                                            break;
+                                                break;
 
-                                        case 35:
-                                            var7 = true;
-                                            break;
+                                            case 35:
+                                                var9 = true;
+                                                break;
 
-                                        case 61:
-                                            String var11 = var3.substring(var5, var6 + 1);
+                                            case 61:
+                                                String var13 = var3.substring(var7, var8 + 1);
 
-                                            if (var4 == null)
-                                            {
-                                                throw new RuntimeException("property " + var11 + " has no scope");
-                                            }
+                                                if (var4 == null)
+                                                {
+                                                    throw new RuntimeException("property " + var13 + " has no scope");
+                                                }
 
-                                            Property var12 = new Property();
-                                            var12.setName(var11);
-                                            var12.value = var3.substring(var9 + 1);
-                                            var9 = var3.length();
-                                            ((Map)var4).put(var11, var12);
-                                            break;
+                                                Property var14 = new Property();
+                                                var14.setName(var13);
+                                                var14.value = var3.substring(var11 + 1);
+                                                var11 = var3.length();
+                                                ((Map)var4).put(var13, var14);
+                                                break;
 
-                                        case 123:
-                                            String var10 = var3.substring(var5, var6 + 1);
-                                            var4 = (Map)this.categories.get(var10);
+                                            case 123:
+                                                String var12 = var3.substring(var7, var8 + 1);
+                                                var4 = (Map)this.categories.get(var12);
 
-                                            if (var4 == null)
-                                            {
-                                                var4 = new TreeMap();
-                                                this.categories.put(var10, var4);
-                                            }
+                                                if (var4 == null)
+                                                {
+                                                    var4 = new TreeMap();
+                                                    this.categories.put(var12, var4);
+                                                }
 
-                                            break;
+                                                break;
 
-                                        case 125:
-                                            var4 = null;
-                                            break;
+                                            case 125:
+                                                var4 = null;
+                                                break;
 
-                                        default:
-                                            throw new RuntimeException("unknown character " + var3.charAt(var9));
+                                            default:
+                                                throw new RuntimeException("unknown character " + var3.charAt(var11));
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                if (var5 == -1)
+                                else
                                 {
-                                    var5 = var9;
-                                }
+                                    if (var7 == -1)
+                                    {
+                                        var7 = var11;
+                                    }
 
-                                var6 = var9;
+                                    var8 = var11;
+                                }
+                            }
+
+                            if (var10)
+                            {
+                                throw new RuntimeException("unmatched quote");
                             }
                         }
                     }
-                    while (!var8);
-
-                    throw new RuntimeException("unmatched quote");
                 }
-
-                return;
             }
-        }
-        catch (IOException var22)
-        {
-            var22.printStackTrace();
-            return;
-        }
-        finally
-        {
-            if (var1 != null)
+            catch (IOException var24)
             {
-                try
+                var24.printStackTrace();
+            }
+            finally
+            {
+                if (var1 != null)
                 {
-                    var1.close();
-                }
-                catch (IOException var21)
-                {
-                    ;
+                    try
+                    {
+                        var1.close();
+                    }
+                    catch (IOException var23)
+                    {
+                        ;
+                    }
                 }
             }
         }
     }
-
+  
     public void save()
     {
-        try
+        if (PARENT != null && PARENT != this)
         {
-            if (this.file.getParentFile() != null)
+            PARENT.save();
+        }
+        else
+        {
+            try
             {
-                this.file.getParentFile().mkdirs();
-            }
-
-            if (!this.file.exists() && !this.file.createNewFile())
-            {
-                return;
-            }
-
-            if (this.file.canWrite())
-            {
-                FileOutputStream var1 = new FileOutputStream(this.file);
-                BufferedWriter var2 = new BufferedWriter(new OutputStreamWriter(var1, this.defaultEncoding));
-                var2.write("# Configuration file\r\n");
-                var2.write("# Generated on " + DateFormat.getInstance().format(new Date()) + "\r\n");
-                var2.write("\r\n");
-                Iterator var3 = this.categories.entrySet().iterator();
-
-                while (var3.hasNext())
+                if (this.file.getParentFile() != null)
                 {
-                    Entry var4 = (Entry)var3.next();
-                    var2.write("####################\r\n");
-                    var2.write("# " + (String)var4.getKey() + " \r\n");
-                    String var5;
+                    this.file.getParentFile().mkdirs();
+                }
 
-                    if (this.customCategoryComments.containsKey(var4.getKey()))
+                if (!this.file.exists() && !this.file.createNewFile())
+                {
+                    return;
+                }
+
+                if (this.file.canWrite())
+                {
+                    FileOutputStream var1 = new FileOutputStream(this.file);
+                    BufferedWriter var2 = new BufferedWriter(new OutputStreamWriter(var1, this.defaultEncoding));
+                    var2.write("# Configuration file\r\n");
+                    var2.write("# Generated on " + DateFormat.getInstance().format(new Date()) + "\r\n");
+                    var2.write("\r\n");
+
+                    if (this.children.isEmpty())
                     {
-                        var2.write("#===================\r\n");
-                        var5 = (String)this.customCategoryComments.get(var4.getKey());
-                        Splitter var6 = Splitter.onPattern("\r?\n");
-                        Iterator var7 = var6.split(var5).iterator();
+                        this.save(var2);
+                    }
+                    else
+                    {
+                        Iterator var3 = this.children.entrySet().iterator();
 
-                        while (var7.hasNext())
+                        while (var3.hasNext())
                         {
-                            String var8 = (String)var7.next();
-                            var2.write("# ");
-                            var2.write(var8 + "\r\n");
+                            Entry var4 = (Entry)var3.next();
+                            var2.write("START: \"" + (String)var4.getKey() + "\"\r\n");
+                            ((Configuration)var4.getValue()).save(var2);
+                            var2.write("END: \"" + (String)var4.getKey() + "\"\r\n\r\n");
                         }
                     }
 
-                    var2.write("####################\r\n\r\n");
-                    var5 = (String)var4.getKey();
-
-                    if (!allowedProperties.matchesAllOf(var5))
-                    {
-                        var5 = '\"' + var5 + '\"';
-                    }
-
-                    var2.write(var5 + " {\r\n");
-                    this.writeProperties(var2, ((Map)var4.getValue()).values());
-                    var2.write("}\r\n\r\n");
+                    var2.close();
+                    var1.close();
                 }
-
-                var2.close();
-                var1.close();
+            }
+            catch (IOException var5)
+            {
+                var5.printStackTrace();
             }
         }
-        catch (IOException var9)
+    }
+
+    private void save(BufferedWriter var1) throws IOException
+    {
+        Iterator var2 = this.categories.entrySet().iterator();
+
+        while (var2.hasNext())
         {
-            var9.printStackTrace();
+            Entry var3 = (Entry)var2.next();
+            var1.write("####################\r\n");
+            var1.write("# " + (String)var3.getKey() + " \r\n");
+            String var4;
+
+            if (this.customCategoryComments.containsKey(var3.getKey()))
+            {
+                var1.write("#===================\r\n");
+                var4 = (String)this.customCategoryComments.get(var3.getKey());
+                Splitter var5 = Splitter.onPattern("\r?\n");
+                Iterator var6 = var5.split(var4).iterator();
+
+                while (var6.hasNext())
+                {
+                    String var7 = (String)var6.next();
+                    var1.write("# ");
+                    var1.write(var7 + "\r\n");
+                }
+            }
+
+            var1.write("####################\r\n\r\n");
+            var4 = (String)var3.getKey();
+
+            if (!allowedProperties.matchesAllOf(var4))
+            {
+                var4 = '\"' + var4 + '\"';
+            }
+
+            var1.write(var4 + " {\r\n");
+            this.writeProperties(var1, ((Map)var3.getValue()).values());
+            var1.write("}\r\n\r\n");
         }
     }
 
@@ -443,6 +529,27 @@ public class Configuration
             var1.write("   " + var8 + "=" + var4.value);
             var1.write("\r\n");
         }
+    }
+
+    private void setChild(String var1, Configuration var2)
+    {
+        if (!this.children.containsKey(var1))
+        {
+            this.children.put(var1, var2);
+        }
+        else
+        {
+            Configuration var3 = (Configuration)this.children.get(var1);
+            var2.categories = var3.categories;
+            var2.customCategoryComments = var3.customCategoryComments;
+            var2.fileName = var3.fileName;
+        }
+    }
+
+    public static void enableGlobalConfig()
+    {
+        PARENT = new Configuration(new File(Loader.instance().getConfigDir(), "global.cfg"));
+        PARENT.load();
     }
 
     static
