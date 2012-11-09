@@ -1484,6 +1484,11 @@ public abstract class Entity {
 
     public boolean ag()     
     {
+        return isRiding();
+    }
+    
+    public boolean isRiding()     
+    {
         return this.vehicle != null && this.vehicle.shouldRiderSit() || this.e(2);
     }
 

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import org.bukkit.craftbukkit.inventory.CraftInventory;
 
 public class CraftingManager {
 
@@ -228,7 +229,10 @@ public class CraftingManager {
         int i = 0;
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
-
+        
+        if (inventorycrafting.resultInventory == null)
+        	inventorycrafting.resultInventory = new FakeInventory();
+        
         for (int j = 0; j < inventorycrafting.getSize(); ++j) {
             ItemStack itemstack2 = inventorycrafting.getItem(j);
 
