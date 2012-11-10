@@ -12,7 +12,7 @@ public class FMLRelauncher
     private static FMLRelauncher INSTANCE;
     public static String logFileNamePattern;
     private static String side;
-    private RelaunchClassLoader classLoader;
+    public RelaunchClassLoader classLoader;
     private Object newApplet;
     private Class appletClass;
     JDialog popupWindow;

@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.IOException;
 import java.security.KeyPair;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -123,8 +124,8 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
                 Logger.getLogger(MinecraftServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        // doesn't work from this "appdomain"
-        //cpw.mods.fml.relauncher.FMLRelaunchLog$ConsoleHandler.reader = this.reader;
+        if (Main.useJline)
+        	net.minecraft.server.FMLLogJLineBreakProxy.reader = this.reader;
         
         Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
 

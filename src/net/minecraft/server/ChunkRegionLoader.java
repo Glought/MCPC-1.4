@@ -54,7 +54,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
             }
 
             try {
-				nbttagcompound = NBTCompressedStreamTools.a((DataInputStream) datainputstream);
+				nbttagcompound = NBTCompressedStreamTools.a((DataInput) datainputstream);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -154,7 +154,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
     public void a(PendingChunkToSave pendingchunktosave) throws java.io.IOException { // CraftBukkit - public -> private, added throws
         DataOutputStream dataoutputstream = RegionFileCache.d(this.d, pendingchunktosave.a.x, pendingchunktosave.a.z);
 
-        NBTCompressedStreamTools.a(pendingchunktosave.b, (DataOutputStream) dataoutputstream);
+        NBTCompressedStreamTools.a(pendingchunktosave.b, (DataOutput) dataoutputstream);
         dataoutputstream.close();
     }
 

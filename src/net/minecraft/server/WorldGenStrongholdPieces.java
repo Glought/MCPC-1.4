@@ -78,10 +78,6 @@ public class WorldGenStrongholdPieces
     java.lang.NoSuchMethodError: net.minecraft.server.WorldGenStrongholdPieces.a(Lnet/minecraft/server/WorldGenStrongholdStart;Ljava/util/List;Ljava/util/Random;IIIII)Lnet/minecraft/server/StructurePiece;
     	at net.minecraft.server.WorldGenStrongholdPiece.a(SourceFile:280)
    */
-  public static StructurePiece a(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5)
-  {
-	  return (StructurePiece)b(paramWorldGenStrongholdStart, paramList, paramRandom, paramInt1, paramInt2, paramInt3, paramInt4, paramInt5);
-  }
 
   private static WorldGenStrongholdPiece b(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5)
   {
@@ -135,7 +131,7 @@ public class WorldGenStrongholdPieces
     return null;
   }
 
-  private static StructurePiece c(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5) {
+  public static StructurePiece a(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5) {
     if (paramInt5 > 50) {
       return null;
     }

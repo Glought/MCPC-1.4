@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import ee.lutsu.alpha.minecraft.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -32,22 +33,23 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.WorldSpecificSaveHandler;
-import net.minecraftforge.event.entity.EntityEvent$CanUpdate;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.entity.EntityEvent$CanUpdate;
 
 public abstract class World implements IBlockAccess {
 
 	public static double MAX_ENTITY_RADIUS = 2.0D;
 	public final WorldMapCollection perWorldStorage;
 	public boolean d = false;
-	public List entityList = new ArrayList();
-	protected List f = new ArrayList();
-	public List tileEntityList = new ArrayList();
-	private List a = new ArrayList();
-	private List b = new ArrayList();
-	public List players = new ArrayList();
-	public List i = new ArrayList();
+	public List entityList = new TList();
+	protected List f = new TList();
+	public List tileEntityList = new TList();
+	private List a = new TList();
+	private List b = new TList();
+	public List players = new TList();
+	public List i = new TList();
 	private long c = 16777215L;
 	public int j = 0;
 	protected int k = (new Random()).nextInt();
@@ -62,7 +64,7 @@ public abstract class World implements IBlockAccess {
 	public int difficulty;
 	public Random random = new Random();
 	public WorldProvider worldProvider; // CraftBukkit - remove final
-	protected List w = new ArrayList();
+	protected List w = new TList();
 	public IChunkProvider chunkProvider; // CraftBukkit - protected -> public
 	protected final IDataManager dataManager;
 	public WorldData worldData; // CraftBukkit - protected -> public
@@ -88,6 +90,64 @@ public abstract class World implements IBlockAccess {
 	public boolean isStatic;
 	private static WorldMapCollection s_mapStorage;
 	private static IDataManager s_savehandler;
+	
+	// Alpha's stuff
+	public ArrayList<BlockChangeHandler> blockChangeHandlers = new ArrayList<BlockChangeHandler>();
+	public ArrayList<EntityTickHandler> entityTickHandlers = new ArrayList<EntityTickHandler>();
+	
+    private void handleBlockUpdate(int x, int y, int z, int type, int data)
+    {
+    	for(BlockChangeHandler eh : blockChangeHandlers)
+    		eh.blockChanged(this, x, y, z, type, data);
+    }
+    
+    private boolean handleTickStart()
+    {
+    	boolean ret = true;
+    	for(EntityTickHandler th : entityTickHandlers)
+    		if (!th.tickStart(this))
+    			ret = false;
+    	
+    	return ret;
+    }
+    
+    private boolean handleLivingTickStart(Entity e)
+    {
+    	boolean ret = true;
+    	for(EntityTickHandler th : entityTickHandlers)
+    		if (!th.livingEntityTickStart(this, e))
+    			ret = false;
+    	
+    	return ret;
+    }
+    private boolean handleTileTickStart(TileEntity e)
+    {
+    	boolean ret = true;
+    	for(EntityTickHandler th : entityTickHandlers)
+    		if (!th.tileEntityTickStart(this, e))
+    			ret = false;
+    	
+    	return ret;
+    }
+    
+    private void handleTickEnd()
+    {
+    	for(EntityTickHandler th : entityTickHandlers)
+    		th.tickEnd(this);
+    }
+    
+    private void handleLivingTickEnd(Entity e)
+    {
+    	for(EntityTickHandler th : entityTickHandlers)
+    		th.livingEntityTickEnd(this, e);
+    }
+    
+    private void handleTileTickEnd(TileEntity e)
+    {
+    	for(EntityTickHandler th : entityTickHandlers)
+    		th.tileEntityTickEnd(this, e);
+    }
+	// end alpha's methods
 
 	public BiomeBase getBiome(int i, int j) 
 	{
@@ -295,6 +355,8 @@ public abstract class World implements IBlockAccess {
 			} else if (j >= 256) {
 				return false;
 			} else {
+				handleBlockUpdate(i, j, k, l, i1);
+				
 				Chunk chunk = this.getChunkAt(i >> 4, k >> 4);
 				boolean flag1 = chunk.a(i & 15, j, k & 15, l, i1);
 
@@ -319,6 +381,8 @@ public abstract class World implements IBlockAccess {
 			} else if (j >= 256) {
 				return false;
 			} else {
+				handleBlockUpdate(i, j, k, l, 0);
+				
 				Chunk chunk = this.getChunkAt(i >> 4, k >> 4);
 				boolean flag = chunk.a(i & 15, j, k & 15, l);
 
@@ -1135,6 +1199,10 @@ public abstract class World implements IBlockAccess {
 	public void b(int i, int j, int k, int l, int i1) {}
 
 	public void tickEntities() {
+		
+		if (!handleTickStart())
+			return;
+		
 		this.methodProfiler.a("entities");
 		this.methodProfiler.a("global");
 
@@ -1240,7 +1308,11 @@ public abstract class World implements IBlockAccess {
 			// CraftBukkit end
 
 			if (!tileentity.r() && tileentity.o() && this.isLoaded(tileentity.x, tileentity.y, tileentity.z)) {
-				tileentity.g();
+				
+				if (handleTileTickStart(tileentity))
+					tileentity.g();
+				
+				handleTileTickEnd(tileentity);
 			}
 
 			if (tileentity.r()) {
@@ -1306,6 +1378,8 @@ public abstract class World implements IBlockAccess {
 
 		this.methodProfiler.b();
 		this.methodProfiler.b();
+		
+		handleTickEnd();
 	}
 
     public void a(Collection var1)
@@ -1357,14 +1431,18 @@ public abstract class World implements IBlockAccess {
 
             if (var2 && var1.ah)
             {
-                if (var1.vehicle != null)
-                {
-                    var1.U();
-                }
-                else
-                {
-                    var1.j_();
-                }
+            	if (handleLivingTickStart(var1))
+            	{
+	                if (var1.vehicle != null)
+	                {
+	                    var1.U();
+	                }
+	                else
+	                {
+	                    var1.j_();
+	                }
+            	}
+            	handleLivingTickEnd(var1);
             }
 
             this.methodProfiler.a("chunkCheck");

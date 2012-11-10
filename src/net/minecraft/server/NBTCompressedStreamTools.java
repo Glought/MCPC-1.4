@@ -29,7 +29,7 @@ public class NBTCompressedStreamTools
 
         try
         {
-            return a(var1);
+            return a((DataInput)var1);
         }
         finally
         {
@@ -46,7 +46,7 @@ public class NBTCompressedStreamTools
 
         try
         {
-            a(var0, var2);
+            a(var0, (DataOutput)var2);
         }
         finally
         {
@@ -61,7 +61,7 @@ public class NBTCompressedStreamTools
 
         try
         {
-            var2 = a(var1);
+            var2 = a((DataInput)var1);
         }
         finally
         {
@@ -78,7 +78,7 @@ public class NBTCompressedStreamTools
 
         try
         {
-            a(var0, var2);
+            a(var0, (DataOutput)var2);
         }
         finally
         {
@@ -91,7 +91,7 @@ public class NBTCompressedStreamTools
     /**
      * Reads from a CompressedStream.
      */
-    public static NBTTagCompound a(DataInputStream var0) throws IOException
+    public static NBTTagCompound a(DataInput var0) throws IOException
     {
         NBTBase var1 = NBTBase.b(var0);
 
@@ -105,7 +105,7 @@ public class NBTCompressedStreamTools
         }
     }
 
-    public static void a(NBTTagCompound var0, DataOutputStream var1) throws IOException
+    public static void a(NBTTagCompound var0, DataOutput var1) throws IOException
     {
         NBTBase.a(var0, var1);
     }
@@ -116,7 +116,7 @@ public class NBTCompressedStreamTools
 
         try
         {
-            a(var0, var2);
+            a(var0, (DataOutput)var2);
         }
         finally
         {
@@ -137,7 +137,7 @@ public class NBTCompressedStreamTools
 
             try
             {
-                var2 = a(var1);
+                var2 = a((DataInput)var1);
             }
             finally
             {

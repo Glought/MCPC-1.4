@@ -1,0 +1,2830 @@
+ .externalToolBuilders/compile jar [Builder].launch |   2 +-
+ forge_to_bukkit_patch.patch                        |   4 +-
+ patches_to_bukkit/EntityItem.java.patch            |   2 +-
+ patches_to_bukkit/ItemDye.java.patch               |   2 +-
+ patches_to_bukkit/ItemHoe.java.patch               |   2 +-
+ .../diff/forge/ItemInWorldManager.java             |   2 +-
+ patches_to_bukkit/diff/forge/NetServerHandler.java |   2 +-
+ patches_to_vanilla/Forge/EntityItem.java.patch     |   2 +-
+ patches_to_vanilla/Forge/ItemDye.java.patch        |   2 +-
+ patches_to_vanilla/Forge/ItemHoe.java.patch        |   2 +-
+ src/cpw/mods/fml/common/FMLModContainer.java       |  17 +--
+ src/cpw/mods/fml/common/Loader.java                |   4 +-
+ src/cpw/mods/fml/common/Mod$Block.java             |  16 ---
+ src/cpw/mods/fml/common/Mod$IMCCallback.java       |  12 ---
+ src/cpw/mods/fml/common/Mod$Init.java              |  12 ---
+ src/cpw/mods/fml/common/Mod$Instance.java          |  14 ---
+ src/cpw/mods/fml/common/Mod$Item.java              |  15 ---
+ src/cpw/mods/fml/common/Mod$Metadata.java          |  14 ---
+ src/cpw/mods/fml/common/Mod$PostInit.java          |  12 ---
+ src/cpw/mods/fml/common/Mod$PreInit.java           |  12 ---
+ src/cpw/mods/fml/common/Mod$ServerStarted.java     |  12 ---
+ src/cpw/mods/fml/common/Mod$ServerStarting.java    |  12 ---
+ src/cpw/mods/fml/common/Mod$ServerStopping.java    |  12 ---
+ src/cpw/mods/fml/common/Mod.java                   |  82 ++++++++++++--
+ .../mods/fml/common/event/FMLInterModComms$1.java  |   5 -
+ .../common/event/FMLInterModComms$IMCEvent.java    |  19 ----
+ .../common/event/FMLInterModComms$IMCMessage.java  |  27 -----
+ .../mods/fml/common/event/FMLInterModComms.java    |  42 +++++++-
+ src/cpw/mods/fml/common/registry/GameRegistry.java |   4 +-
+ .../relauncher/FMLRelaunchLog$ConsoleHandler.java  |  46 +++++---
+ src/cpw/mods/fml/relauncher/FMLRelauncher.java     |   2 +-
+ src/net/minecraft/server/Chunk.java                |  11 +-
+ src/net/minecraft/server/ChunkRegionLoader.java    |  11 +-
+ src/net/minecraft/server/EntityItem.java           |   5 +-
+ src/net/minecraft/server/ItemBucket.java           |   4 +-
+ src/net/minecraft/server/ItemDye.java              |   4 +-
+ src/net/minecraft/server/ItemHoe.java              |   4 +-
+ src/net/minecraft/server/ItemInWorldManager.java   |  25 +++--
+ src/net/minecraft/server/MinecraftServer.java      |  38 ++++++-
+ .../minecraft/server/NBTCompressedStreamTools.java |  16 +--
+ src/net/minecraft/server/NetServerHandler.java     |  18 ++--
+ src/net/minecraft/server/World.java                | 115 ++++++++++++++++----
+ .../minecraft/server/WorldGenStrongholdPieces.java |   6 +-
+ src/net/minecraft/server/WorldServer.java          |   4 +-
+ .../minecraftforge/common/DimensionManager.java    |   9 +-
+ src/net/minecraftforge/common/ForgeHooks.java      |   7 +-
+ .../common/ForgeInternalHandler.java               |   7 +-
+ src/net/minecraftforge/event/Event$HasResult.java  |  12 ---
+ src/net/minecraftforge/event/Event$Result.java     |   8 --
+ src/net/minecraftforge/event/Event.java            |  29 +++--
+ .../minecraftforge/event/ForgeEventFactory.java    |  10 +-
+ src/net/minecraftforge/event/ListenerList$1.java   |   5 -
+ .../event/ListenerList$ListenerListInst.java       | 120 ---------------------
+ src/net/minecraftforge/event/ListenerList.java     | 117 ++++++++++++++++++--
+ .../event/entity/EntityEvent$CanUpdate.java        |  13 ---
+ .../event/entity/EntityEvent$EnteringChunk.java    |  20 ----
+ .../minecraftforge/event/entity/EntityEvent.java   |  28 +++++
+ .../entity/living/LivingEvent$LivingJumpEvent.java |  11 --
+ .../living/LivingEvent$LivingUpdateEvent.java      |  13 ---
+ .../event/entity/living/LivingEvent.java           |  18 ++++
+ .../event/entity/player/BonemealEvent.java         |   4 +-
+ .../event/entity/player/EntityItemPickupEvent.java |   4 +-
+ .../event/entity/player/FillBucketEvent.java       |   4 +-
+ .../entity/player/PlayerEvent$BreakSpeed.java      |  23 ----
+ .../entity/player/PlayerEvent$HarvestCheck.java    |  17 ---
+ .../event/entity/player/PlayerEvent.java           |  34 ++++++
+ .../entity/player/PlayerInteractEvent$Action.java  |   8 --
+ .../event/entity/player/PlayerInteractEvent.java   |  29 +++--
+ .../event/entity/player/UseHoeEvent.java           |   4 +-
+ .../event/world/ChunkDataEvent$Load.java           |  12 ---
+ .../event/world/ChunkDataEvent$Save.java           |  12 ---
+ .../minecraftforge/event/world/ChunkDataEvent.java |  16 +++
+ .../event/world/ChunkEvent$Load.java               |  11 --
+ .../event/world/ChunkEvent$Unload.java             |  11 --
+ src/net/minecraftforge/event/world/ChunkEvent.java |  18 ++++
+ .../event/world/WorldEvent$Load.java               |  11 --
+ .../event/world/WorldEvent$Save.java               |  11 --
+ .../event/world/WorldEvent$Unload.java             |  11 --
+ src/net/minecraftforge/event/world/WorldEvent.java |  24 +++++
+ .../oredict/OreDictionary$OreRegisterEvent.java    |  16 ---
+ src/net/minecraftforge/oredict/OreDictionary.java  |  17 ++-
+ src/org/bukkit/craftbukkit/CraftServer.java        |   5 +-
+ 82 files changed, 673 insertions(+), 730 deletions(-)
+
+diff --git a/.externalToolBuilders/compile jar [Builder].launch b/.externalToolBuilders/compile jar [Builder].launch
+index 90d0a64..3776ff4 100644
+--- a/.externalToolBuilders/compile jar [Builder].launch	
++++ b/.externalToolBuilders/compile jar [Builder].launch	
+@@ -7,5 +7,5 @@
+ <stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value="full,incremental,auto,"/>
+ <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="cfM ../debug/mcpc-1.4.2-beta.jar *"/>
+ <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
+-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="E:\myProj\Java\MCP\MCP-1.4\bin"/>
++<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="D:\Git\MCPC-1.4\bin"/>
+ </launchConfiguration>
+diff --git a/forge_to_bukkit_patch.patch b/forge_to_bukkit_patch.patch
+index d172865..6e293bf 100644
+--- a/forge_to_bukkit_patch.patch
++++ b/forge_to_bukkit_patch.patch
+@@ -9593,7 +9593,7 @@ Index: ItemInWorldManager.java
+ +import net.minecraftforge.event.ForgeEventFactory;
+ +import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+ +import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-+import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
+++import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+ +
+  public class ItemInWorldManager
+  {
+@@ -10972,7 +10972,7 @@ Index: NetServerHandler.java
+ +import net.minecraftforge.event.Event$Result;
+ +import net.minecraftforge.event.ForgeEventFactory;
+ +import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-+import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
+++import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+  
+  public class NetServerHandler extends NetHandler
+  {
+diff --git a/patches_to_bukkit/EntityItem.java.patch b/patches_to_bukkit/EntityItem.java.patch
+index 4e2edaf..9ed5009 100644
+--- a/patches_to_bukkit/EntityItem.java.patch
++++ b/patches_to_bukkit/EntityItem.java.patch
+@@ -6,7 +6,7 @@
+  import java.util.Iterator;
+ +
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.item.ItemExpireEvent;
+ +import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+  
+diff --git a/patches_to_bukkit/ItemDye.java.patch b/patches_to_bukkit/ItemDye.java.patch
+index 9df29f0..2a4f93b 100644
+--- a/patches_to_bukkit/ItemDye.java.patch
++++ b/patches_to_bukkit/ItemDye.java.patch
+@@ -7,7 +7,7 @@
+ +
+ +import net.minecraftforge.common.ForgeHooks;
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.player.BonemealEvent;
+  
+  public class ItemDye extends Item
+diff --git a/patches_to_bukkit/ItemHoe.java.patch b/patches_to_bukkit/ItemHoe.java.patch
+index 4605d0c..2674a96 100644
+--- a/patches_to_bukkit/ItemHoe.java.patch
++++ b/patches_to_bukkit/ItemHoe.java.patch
+@@ -4,7 +4,7 @@
+  package net.minecraft.src;
+  
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.player.UseHoeEvent;
+  import cpw.mods.fml.common.Side;
+  import cpw.mods.fml.common.asm.SideOnly;
+diff --git a/patches_to_bukkit/diff/forge/ItemInWorldManager.java b/patches_to_bukkit/diff/forge/ItemInWorldManager.java
+index f251eee..45107c5 100644
+--- a/patches_to_bukkit/diff/forge/ItemInWorldManager.java
++++ b/patches_to_bukkit/diff/forge/ItemInWorldManager.java
+@@ -5,7 +5,7 @@ import net.minecraftforge.event.Event$Result;
+ import net.minecraftforge.event.ForgeEventFactory;
+ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
++import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+ 
+ public class ItemInWorldManager
+ {
+diff --git a/patches_to_bukkit/diff/forge/NetServerHandler.java b/patches_to_bukkit/diff/forge/NetServerHandler.java
+index 686d62e..e510ae0 100644
+--- a/patches_to_bukkit/diff/forge/NetServerHandler.java
++++ b/patches_to_bukkit/diff/forge/NetServerHandler.java
+@@ -11,7 +11,7 @@ import java.util.logging.Logger;
+ import net.minecraftforge.event.Event$Result;
+ import net.minecraftforge.event.ForgeEventFactory;
+ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
++import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+ 
+ public class NetServerHandler extends NetHandler
+ {
+diff --git a/patches_to_vanilla/Forge/EntityItem.java.patch b/patches_to_vanilla/Forge/EntityItem.java.patch
+index 4e2edaf..9ed5009 100644
+--- a/patches_to_vanilla/Forge/EntityItem.java.patch
++++ b/patches_to_vanilla/Forge/EntityItem.java.patch
+@@ -6,7 +6,7 @@
+  import java.util.Iterator;
+ +
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.item.ItemExpireEvent;
+ +import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+  
+diff --git a/patches_to_vanilla/Forge/ItemDye.java.patch b/patches_to_vanilla/Forge/ItemDye.java.patch
+index 9df29f0..2a4f93b 100644
+--- a/patches_to_vanilla/Forge/ItemDye.java.patch
++++ b/patches_to_vanilla/Forge/ItemDye.java.patch
+@@ -7,7 +7,7 @@
+ +
+ +import net.minecraftforge.common.ForgeHooks;
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.player.BonemealEvent;
+  
+  public class ItemDye extends Item
+diff --git a/patches_to_vanilla/Forge/ItemHoe.java.patch b/patches_to_vanilla/Forge/ItemHoe.java.patch
+index 4605d0c..2674a96 100644
+--- a/patches_to_vanilla/Forge/ItemHoe.java.patch
++++ b/patches_to_vanilla/Forge/ItemHoe.java.patch
+@@ -4,7 +4,7 @@
+  package net.minecraft.src;
+  
+ +import net.minecraftforge.common.MinecraftForge;
+-+import net.minecraftforge.event.Event.Result;
+++import net.minecraftforge.event.Event;
+ +import net.minecraftforge.event.entity.player.UseHoeEvent;
+  import cpw.mods.fml.common.Side;
+  import cpw.mods.fml.common.asm.SideOnly;
+diff --git a/src/cpw/mods/fml/common/FMLModContainer.java b/src/cpw/mods/fml/common/FMLModContainer.java
+index 38e5214..6f49e6d 100644
+--- a/src/cpw/mods/fml/common/FMLModContainer.java
++++ b/src/cpw/mods/fml/common/FMLModContainer.java
+@@ -14,21 +14,12 @@ import com.google.common.eventbus.EventBus;
+ import com.google.common.eventbus.Subscribe;
+ import cpw.mods.fml.common.FMLModContainer$1;
+ import cpw.mods.fml.common.FMLModContainer$2;
+-import cpw.mods.fml.common.Mod$IMCCallback;
+-import cpw.mods.fml.common.Mod$Init;
+-import cpw.mods.fml.common.Mod$Instance;
+-import cpw.mods.fml.common.Mod$Metadata;
+-import cpw.mods.fml.common.Mod$PostInit;
+-import cpw.mods.fml.common.Mod$PreInit;
+-import cpw.mods.fml.common.Mod$ServerStarted;
+-import cpw.mods.fml.common.Mod$ServerStarting;
+-import cpw.mods.fml.common.Mod$ServerStopping;
+ import cpw.mods.fml.common.discovery.ASMDataTable;
+ import cpw.mods.fml.common.discovery.ASMDataTable$ASMData;
+ import cpw.mods.fml.common.event.FMLConstructionEvent;
+ import cpw.mods.fml.common.event.FMLEvent;
+ import cpw.mods.fml.common.event.FMLInitializationEvent;
+-import cpw.mods.fml.common.event.FMLInterModComms$IMCEvent;
++import cpw.mods.fml.common.event.FMLInterModComms;
+ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+ import cpw.mods.fml.common.event.FMLServerStartedEvent;
+@@ -73,7 +64,7 @@ public class FMLModContainer implements ModContainer
+     private Multimap annotations;
+     private DefaultArtifactVersion processedVersion;
+     private boolean isNetworkMod;
+-    private static final BiMap modAnnotationTypes = ImmutableBiMap.builder().put(FMLPreInitializationEvent.class, Mod$PreInit.class).put(FMLInitializationEvent.class, Mod$Init.class).put(FMLPostInitializationEvent.class, Mod$PostInit.class).put(FMLServerStartingEvent.class, Mod$ServerStarting.class).put(FMLServerStartedEvent.class, Mod$ServerStarted.class).put(FMLServerStoppingEvent.class, Mod$ServerStopping.class).put(FMLInterModComms$IMCEvent.class, Mod$IMCCallback.class).build();
++    private static final BiMap modAnnotationTypes = ImmutableBiMap.builder().put(FMLPreInitializationEvent.class, Mod.PreInit.class).put(FMLInitializationEvent.class, Mod.Init.class).put(FMLPostInitializationEvent.class, Mod.PostInit.class).put(FMLServerStartingEvent.class, Mod.ServerStarting.class).put(FMLServerStartedEvent.class, Mod.ServerStarted.class).put(FMLServerStoppingEvent.class, Mod.ServerStopping.class).put(FMLInterModComms.IMCEvent.class, Mod.IMCCallback.class).build();
+     private static final BiMap modTypeAnnotations = modAnnotationTypes.inverse();
+     private String annotationDependencies;
+     private VersionRange minecraftAccepted;
+@@ -312,8 +303,8 @@ public class FMLModContainer implements ModContainer
+     private void processFieldAnnotations(ASMDataTable var1) throws Exception
+     {
+         SetMultimap var2 = var1.getAnnotationsFor(this);
+-        this.parseSimpleFieldAnnotation(var2, Mod$Instance.class.getName(), new FMLModContainer$1(this));
+-        this.parseSimpleFieldAnnotation(var2, Mod$Metadata.class.getName(), new FMLModContainer$2(this));
++        this.parseSimpleFieldAnnotation(var2, Mod.Instance.class.getName(), new FMLModContainer$1(this));
++        this.parseSimpleFieldAnnotation(var2, Mod.Metadata.class.getName(), new FMLModContainer$2(this));
+     }
+ 
+     private void parseSimpleFieldAnnotation(SetMultimap var1, String var2, Function var3) throws IllegalAccessException
+diff --git a/src/cpw/mods/fml/common/Loader.java b/src/cpw/mods/fml/common/Loader.java
+index ccc264f..b94dee3 100644
+--- a/src/cpw/mods/fml/common/Loader.java
++++ b/src/cpw/mods/fml/common/Loader.java
+@@ -37,7 +37,7 @@ import com.google.common.collect.Sets.SetView;
+ import com.google.common.collect.TreeMultimap;
+ 
+ import cpw.mods.fml.common.discovery.ModDiscoverer;
+-import cpw.mods.fml.common.event.FMLInterModComms$IMCEvent;
++import cpw.mods.fml.common.event.FMLInterModComms;
+ import cpw.mods.fml.common.event.FMLLoadEvent;
+ import cpw.mods.fml.common.functions.ModIdFunction;
+ import cpw.mods.fml.common.toposort.ModSorter;
+@@ -577,7 +577,7 @@ public class Loader
+     {
+         this.modController.distributeStateMessage(LoaderState.INITIALIZATION, new Object[0]);
+         this.modController.transition(LoaderState.POSTINITIALIZATION);
+-        this.modController.distributeStateMessage(FMLInterModComms$IMCEvent.class);
++        this.modController.distributeStateMessage(FMLInterModComms.IMCEvent.class);
+         this.modController.distributeStateMessage(LoaderState.POSTINITIALIZATION, new Object[0]);
+         this.modController.transition(LoaderState.AVAILABLE);
+         this.modController.distributeStateMessage(LoaderState.AVAILABLE, new Object[0]);
+diff --git a/src/cpw/mods/fml/common/Mod$Block.java b/src/cpw/mods/fml/common/Mod$Block.java
+deleted file mode 100644
+index a0c8fee..0000000
+--- a/src/cpw/mods/fml/common/Mod$Block.java
++++ /dev/null
+@@ -1,16 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-import net.minecraft.server.ItemBlock;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.FIELD})
+-public @interface Mod$Block
+-{
+-    String name();
+-
+-Class itemTypeClass() default ItemBlock.class;
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$IMCCallback.java b/src/cpw/mods/fml/common/Mod$IMCCallback.java
+deleted file mode 100644
+index 7d12ebf..0000000
+--- a/src/cpw/mods/fml/common/Mod$IMCCallback.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$IMCCallback
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$Init.java b/src/cpw/mods/fml/common/Mod$Init.java
+deleted file mode 100644
+index 31038ca..0000000
+--- a/src/cpw/mods/fml/common/Mod$Init.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$Init
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$Instance.java b/src/cpw/mods/fml/common/Mod$Instance.java
+deleted file mode 100644
+index d5071f1..0000000
+--- a/src/cpw/mods/fml/common/Mod$Instance.java
++++ /dev/null
+@@ -1,14 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.FIELD})
+-public @interface Mod$Instance
+-{
+-
+-String value() default "";
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$Item.java b/src/cpw/mods/fml/common/Mod$Item.java
+deleted file mode 100644
+index e48e3e9..0000000
+--- a/src/cpw/mods/fml/common/Mod$Item.java
++++ /dev/null
+@@ -1,15 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.FIELD})
+-public @interface Mod$Item
+-{
+-    String name();
+-
+-    String typeClass();
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$Metadata.java b/src/cpw/mods/fml/common/Mod$Metadata.java
+deleted file mode 100644
+index 2a8b7c6..0000000
+--- a/src/cpw/mods/fml/common/Mod$Metadata.java
++++ /dev/null
+@@ -1,14 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.FIELD})
+-public @interface Mod$Metadata
+-{
+-
+-String value() default "";
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$PostInit.java b/src/cpw/mods/fml/common/Mod$PostInit.java
+deleted file mode 100644
+index 802eb2f..0000000
+--- a/src/cpw/mods/fml/common/Mod$PostInit.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$PostInit
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$PreInit.java b/src/cpw/mods/fml/common/Mod$PreInit.java
+deleted file mode 100644
+index a81a544..0000000
+--- a/src/cpw/mods/fml/common/Mod$PreInit.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$PreInit
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$ServerStarted.java b/src/cpw/mods/fml/common/Mod$ServerStarted.java
+deleted file mode 100644
+index 48741b3..0000000
+--- a/src/cpw/mods/fml/common/Mod$ServerStarted.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$ServerStarted
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$ServerStarting.java b/src/cpw/mods/fml/common/Mod$ServerStarting.java
+deleted file mode 100644
+index 4c340c2..0000000
+--- a/src/cpw/mods/fml/common/Mod$ServerStarting.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$ServerStarting
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod$ServerStopping.java b/src/cpw/mods/fml/common/Mod$ServerStopping.java
+deleted file mode 100644
+index 91e5f74..0000000
+--- a/src/cpw/mods/fml/common/Mod$ServerStopping.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package cpw.mods.fml.common;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.METHOD})
+-public @interface Mod$ServerStopping
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/Mod.java b/src/cpw/mods/fml/common/Mod.java
+index 9bf1a5d..df95add 100644
+--- a/src/cpw/mods/fml/common/Mod.java
++++ b/src/cpw/mods/fml/common/Mod.java
+@@ -5,23 +5,91 @@ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ import java.lang.annotation.Target;
+ 
++import net.minecraft.server.ItemBlock;
++
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target( {ElementType.TYPE})
+ public @interface Mod
+ {
+     String modid();
++	String name() default "";
++	String version() default "";
++	String dependencies() default "";
++	boolean useMetadata() default false;
++	String acceptedMinecraftVersions() default "";
++	String bukkitPlugin() default "";
++	String modExclusionList() default "";
++
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.FIELD})
++	public static @interface Block
++	{
++	    String name();
++	    Class itemTypeClass() default ItemBlock.class;
++	}
++	
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface IMCCallback
++	{
++	}
++
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface Init
++	{
++	}
++
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.FIELD})
++	public static @interface Instance
++	{
++		String value() default "";
++	}
++	
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.FIELD})
++	public static @interface Item
++	{
++	    String name();
++	    String typeClass();
++	}
+ 
+-String name() default "";
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.FIELD})
++	public static @interface Metadata
++	{
++		String value() default "";
++	}
+ 
+-String version() default "";
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface PostInit
++	{
++	}
+ 
+-String dependencies() default "";
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface PreInit
++	{
++	}
+ 
+-boolean useMetadata() default false;
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface ServerStarted
++	{
++	}
+ 
+-String acceptedMinecraftVersions() default "";
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface ServerStarting
++	{
++	}
+ 
+-String bukkitPlugin() default "";
++	@Retention(RetentionPolicy.RUNTIME)
++	@Target( {ElementType.METHOD})
++	public static @interface ServerStopping
++	{
++	}
+ 
+-String modExclusionList() default "";
+ }
+diff --git a/src/cpw/mods/fml/common/event/FMLInterModComms$1.java b/src/cpw/mods/fml/common/event/FMLInterModComms$1.java
+deleted file mode 100644
+index e50623f..0000000
+--- a/src/cpw/mods/fml/common/event/FMLInterModComms$1.java
++++ /dev/null
+@@ -1,5 +0,0 @@
+-package cpw.mods.fml.common.event;
+-
+-class FMLInterModComms$1
+-{
+-}
+diff --git a/src/cpw/mods/fml/common/event/FMLInterModComms$IMCEvent.java b/src/cpw/mods/fml/common/event/FMLInterModComms$IMCEvent.java
+deleted file mode 100644
+index 48ad613..0000000
+--- a/src/cpw/mods/fml/common/event/FMLInterModComms$IMCEvent.java
++++ /dev/null
+@@ -1,19 +0,0 @@
+-package cpw.mods.fml.common.event;
+-
+-import com.google.common.collect.ImmutableList;
+-import cpw.mods.fml.common.ModContainer;
+-
+-public class FMLInterModComms$IMCEvent extends FMLEvent
+-{
+-    private ImmutableList currentList;
+-
+-    public void applyModContainer(ModContainer var1)
+-    {
+-        this.currentList = ImmutableList.copyOf(FMLInterModComms.access$000().get(var1.getModId()));
+-    }
+-
+-    public ImmutableList getMessages()
+-    {
+-        return this.currentList;
+-    }
+-}
+diff --git a/src/cpw/mods/fml/common/event/FMLInterModComms$IMCMessage.java b/src/cpw/mods/fml/common/event/FMLInterModComms$IMCMessage.java
+deleted file mode 100644
+index 17b5223..0000000
+--- a/src/cpw/mods/fml/common/event/FMLInterModComms$IMCMessage.java
++++ /dev/null
+@@ -1,27 +0,0 @@
+-package cpw.mods.fml.common.event;
+-
+-import cpw.mods.fml.common.event.FMLInterModComms$1;
+-
+-public final class FMLInterModComms$IMCMessage
+-{
+-    public final String sender;
+-    public final String key;
+-    public final String value;
+-
+-    private FMLInterModComms$IMCMessage(String var1, String var2, String var3)
+-    {
+-        this.key = var2;
+-        this.value = var3;
+-        this.sender = var1;
+-    }
+-
+-    public String toString()
+-    {
+-        return this.sender;
+-    }
+-
+-    FMLInterModComms$IMCMessage(String var1, String var2, String var3, FMLInterModComms$1 var4)
+-    {
+-        this(var1, var2, var3);
+-    }
+-}
+diff --git a/src/cpw/mods/fml/common/event/FMLInterModComms.java b/src/cpw/mods/fml/common/event/FMLInterModComms.java
+index 405c5c0..0f8154c 100644
+--- a/src/cpw/mods/fml/common/event/FMLInterModComms.java
++++ b/src/cpw/mods/fml/common/event/FMLInterModComms.java
+@@ -1,10 +1,11 @@
+ package cpw.mods.fml.common.event;
+ 
+ import com.google.common.collect.ArrayListMultimap;
++import com.google.common.collect.ImmutableList;
++
+ import cpw.mods.fml.common.Loader;
+ import cpw.mods.fml.common.LoaderState;
+-import cpw.mods.fml.common.event.FMLInterModComms$1;
+-import cpw.mods.fml.common.event.FMLInterModComms$IMCMessage;
++import cpw.mods.fml.common.ModContainer;
+ 
+ public class FMLInterModComms
+ {
+@@ -18,7 +19,7 @@ public class FMLInterModComms
+         }
+         else
+         {
+-            modMessages.put(var0, new FMLInterModComms$IMCMessage(Loader.instance().activeModContainer().getModId(), var1, var2, (FMLInterModComms$1)null));
++            modMessages.put(var0, new FMLInterModComms.IMCMessage(Loader.instance().activeModContainer().getModId(), var1, var2));
+             return Loader.isModLoaded(var0) && !Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION);
+         }
+     }
+@@ -27,4 +28,39 @@ public class FMLInterModComms
+     {
+         return modMessages;
+     }
++    
++    public static class IMCEvent extends FMLEvent
++    {
++        private ImmutableList currentList;
++
++        public void applyModContainer(ModContainer var1)
++        {
++            this.currentList = ImmutableList.copyOf(FMLInterModComms.access$000().get(var1.getModId()));
++        }
++
++        public ImmutableList getMessages()
++        {
++            return this.currentList;
++        }
++    }
++    
++    public final static class IMCMessage
++    {
++        public final String sender;
++        public final String key;
++        public final String value;
++
++        private IMCMessage(String var1, String var2, String var3)
++        {
++            this.key = var2;
++            this.value = var3;
++            this.sender = var1;
++        }
++
++        public String toString()
++        {
++            return this.sender;
++        }
++    }
++
+ }
+diff --git a/src/cpw/mods/fml/common/registry/GameRegistry.java b/src/cpw/mods/fml/common/registry/GameRegistry.java
+index 655eadc..2516e9c 100644
+--- a/src/cpw/mods/fml/common/registry/GameRegistry.java
++++ b/src/cpw/mods/fml/common/registry/GameRegistry.java
+@@ -15,7 +15,7 @@ import cpw.mods.fml.common.IWorldGenerator;
+ import cpw.mods.fml.common.Loader;
+ import cpw.mods.fml.common.LoaderException;
+ import cpw.mods.fml.common.LoaderState;
+-import cpw.mods.fml.common.Mod$Block;
++import cpw.mods.fml.common.Mod;
+ import cpw.mods.fml.common.ModContainer;
+ import cpw.mods.fml.common.registry.GameRegistry$1;
+ import java.util.Iterator;
+@@ -101,7 +101,7 @@ public class GameRegistry
+         return var16;
+     }
+ 
+-    public static Object buildBlock(ModContainer var0, Class var1, Mod$Block var2) throws Exception
++    public static Object buildBlock(ModContainer var0, Class var1, Mod.Block var2) throws Exception
+     {
+         Object var3 = var1.getConstructor(new Class[] {Integer.TYPE}).newInstance(new Object[] {Integer.valueOf(findSpareBlockId())});
+         registerBlock((Block)var3);
+diff --git a/src/cpw/mods/fml/relauncher/FMLRelaunchLog$ConsoleHandler.java b/src/cpw/mods/fml/relauncher/FMLRelaunchLog$ConsoleHandler.java
+index 75093b8..1b41c41 100644
+--- a/src/cpw/mods/fml/relauncher/FMLRelaunchLog$ConsoleHandler.java
++++ b/src/cpw/mods/fml/relauncher/FMLRelaunchLog$ConsoleHandler.java
+@@ -1,6 +1,7 @@
+ package cpw.mods.fml.relauncher;
+ 
+ import java.io.IOException;
++import java.lang.reflect.Method;
+ import java.util.logging.ConsoleHandler;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+@@ -15,24 +16,41 @@ import org.bukkit.craftbukkit.util.TerminalConsoleHandler;
+ public class FMLRelaunchLog$ConsoleHandler extends ConsoleHandler 
+ {
+ 	public static ConsoleReader reader = null;
++	private static Method preCall;
++	private static Method postCall;
+ 	
+ 	public synchronized void flush()
+ 	{
+-		try {
+-			if (Main.useJline && reader != null) {
+-				reader.print("\r");
+-				reader.flush();
+-				super.flush();
+-				try {
+-					reader.drawLine();
+-				} catch (Throwable ex) {
+-					reader.getCursorBuffer().clear();
+-				}
+-				reader.flush();
+-			} else {
+-				super.flush();
++		if (preCall == null)
++		{
++			try 
++			{
++				preCall = Class.forName("net.minecraft.server.MinecraftServer", false, FMLRelauncher.instance().classLoader).getMethod("consoleReaderResetPreLog", new Class[0]);
++			} 
++			catch (NoSuchMethodException | SecurityException | ClassNotFoundException e) 
++			{
++				e.printStackTrace();
++			}
++			try 
++			{
++				postCall = Class.forName("net.minecraft.server.MinecraftServer", false, FMLRelauncher.instance().classLoader).getMethod("consoleReaderResetPostLog", new Class[0]);
++			} 
++			catch (NoSuchMethodException | SecurityException | ClassNotFoundException e) 
++			{
++				e.printStackTrace();
+ 			}
+-		} catch (IOException ex) {
++		}
++			
++		try {
++			if (preCall != null)
++				preCall.invoke(null);
++			
++			super.flush();
++			
++			if (postCall != null)
++				postCall.invoke(null);
++
++		} catch (Exception ex) {
+ 			Logger.getLogger(TerminalConsoleHandler.class.getName()).log(Level.SEVERE, null, ex);
+ 		}
+ 	}
+diff --git a/src/cpw/mods/fml/relauncher/FMLRelauncher.java b/src/cpw/mods/fml/relauncher/FMLRelauncher.java
+index 28debe5..4cea9d5 100644
+--- a/src/cpw/mods/fml/relauncher/FMLRelauncher.java
++++ b/src/cpw/mods/fml/relauncher/FMLRelauncher.java
+@@ -12,7 +12,7 @@ public class FMLRelauncher
+     private static FMLRelauncher INSTANCE;
+     public static String logFileNamePattern;
+     private static String side;
+-    private RelaunchClassLoader classLoader;
++    public RelaunchClassLoader classLoader;
+     private Object newApplet;
+     private Class appletClass;
+     JDialog popupWindow;
+diff --git a/src/net/minecraft/server/Chunk.java b/src/net/minecraft/server/Chunk.java
+index 4c8d1eb..bde3c78 100644
+--- a/src/net/minecraft/server/Chunk.java
++++ b/src/net/minecraft/server/Chunk.java
+@@ -10,9 +10,8 @@ import java.util.List;
+ import java.util.Map;
+ import java.util.Random;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.entity.EntityEvent$EnteringChunk;
+-import net.minecraftforge.event.world.ChunkEvent$Load;
+-import net.minecraftforge.event.world.ChunkEvent$Unload;
++import net.minecraftforge.event.entity.EntityEvent;
++import net.minecraftforge.event.world.ChunkEvent;
+ 
+ // CraftBukkit start
+ import org.bukkit.Bukkit;
+@@ -655,7 +654,7 @@ public class Chunk {
+             k = this.entitySlices.length - 1;
+         }
+ 
+-        MinecraftForge.EVENT_BUS.post(new EntityEvent$EnteringChunk(entity, this.x, this.z, entity.ai, entity.ak));
++        MinecraftForge.EVENT_BUS.post(new EntityEvent.EnteringChunk(entity, this.x, this.z, entity.ai, entity.ak));
+         entity.ah = true;
+         entity.ai = this.x;
+         entity.aj = k;
+@@ -785,7 +784,7 @@ public class Chunk {
+             this.world.a(var4);
+         }
+ 
+-        MinecraftForge.EVENT_BUS.post(new ChunkEvent$Load(this));
++        MinecraftForge.EVENT_BUS.post(new ChunkEvent.Load(this));
+     }
+ 
+     public void removeEntities() {
+@@ -822,7 +821,7 @@ public class Chunk {
+             this.world.b(list);
+         }
+         
+-        MinecraftForge.EVENT_BUS.post(new ChunkEvent$Unload(this));
++        MinecraftForge.EVENT_BUS.post(new ChunkEvent.Unload(this));
+     }
+ 
+     public void e() {
+diff --git a/src/net/minecraft/server/ChunkRegionLoader.java b/src/net/minecraft/server/ChunkRegionLoader.java
+index ce6885f..faf4470 100644
+--- a/src/net/minecraft/server/ChunkRegionLoader.java
++++ b/src/net/minecraft/server/ChunkRegionLoader.java
+@@ -12,8 +12,7 @@ import java.util.List;
+ import java.util.Set;
+ import java.io.IOException;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.world.ChunkDataEvent$Load;
+-import net.minecraftforge.event.world.ChunkDataEvent$Save;
++import net.minecraftforge.event.world.ChunkDataEvent;
+ 
+ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
+ 
+@@ -54,7 +53,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
+             }
+ 
+             try {
+-				nbttagcompound = NBTCompressedStreamTools.a((DataInputStream) datainputstream);
++				nbttagcompound = NBTCompressedStreamTools.a((DataInput) datainputstream);
+ 			} catch (IOException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+@@ -81,7 +80,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
+                 chunk = this.a(world, nbttagcompound.getCompound("Level"));
+             }
+             
+-            MinecraftForge.EVENT_BUS.post(new ChunkDataEvent$Load(chunk, nbttagcompound));
++            MinecraftForge.EVENT_BUS.post(new ChunkDataEvent.Load(chunk, nbttagcompound));
+             return chunk;
+         }
+     }
+@@ -102,7 +101,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
+             nbttagcompound.set("Level", nbttagcompound1);
+             this.a(chunk, world, nbttagcompound1);
+             this.a(chunk.l(), nbttagcompound);
+-            MinecraftForge.EVENT_BUS.post(new ChunkDataEvent$Save(chunk, nbttagcompound));
++            MinecraftForge.EVENT_BUS.post(new ChunkDataEvent.Save(chunk, nbttagcompound));
+         } catch (Exception exception) {
+             exception.printStackTrace();
+         }
+@@ -154,7 +153,7 @@ public class ChunkRegionLoader implements IAsyncChunkSaver, IChunkLoader {
+     public void a(PendingChunkToSave pendingchunktosave) throws java.io.IOException { // CraftBukkit - public -> private, added throws
+         DataOutputStream dataoutputstream = RegionFileCache.d(this.d, pendingchunktosave.a.x, pendingchunktosave.a.z);
+ 
+-        NBTCompressedStreamTools.a(pendingchunktosave.b, (DataOutputStream) dataoutputstream);
++        NBTCompressedStreamTools.a(pendingchunktosave.b, (DataOutput) dataoutputstream);
+         dataoutputstream.close();
+     }
+ 
+diff --git a/src/net/minecraft/server/EntityItem.java b/src/net/minecraft/server/EntityItem.java
+index b987bb0..633b860 100644
+--- a/src/net/minecraft/server/EntityItem.java
++++ b/src/net/minecraft/server/EntityItem.java
+@@ -3,9 +3,10 @@ package net.minecraft.server;
+ import cpw.mods.fml.common.registry.GameRegistry;
+ import java.util.Iterator;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.entity.item.ItemExpireEvent;
+ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
++
+ import org.bukkit.event.player.PlayerPickupItemEvent; // CraftBukkit
+ 
+ public class EntityItem extends Entity {
+@@ -238,7 +239,7 @@ public class EntityItem extends Entity {
+             }
+             // CraftBukkit end
+ 
+-            if (this.pickupDelay <= 0 && (var2.getResult() == Event$Result.ALLOW || i <= 0 || entityhuman.inventory.pickup(this.itemStack))) {
++            if (this.pickupDelay <= 0 && (var2.getResult() == Event.Result.ALLOW || i <= 0 || entityhuman.inventory.pickup(this.itemStack))) {
+                 if (this.itemStack.id == Block.LOG.id) {
+                     entityhuman.a((Statistic) AchievementList.g);
+                 }
+diff --git a/src/net/minecraft/server/ItemBucket.java b/src/net/minecraft/server/ItemBucket.java
+index 81daafc..a1f048c 100644
+--- a/src/net/minecraft/server/ItemBucket.java
++++ b/src/net/minecraft/server/ItemBucket.java
+@@ -1,7 +1,7 @@
+ package net.minecraft.server;
+ 
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.entity.player.FillBucketEvent;
+ // CraftBukkit start
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+@@ -38,7 +38,7 @@ public class ItemBucket extends Item {
+             {
+                 return itemstack;
+             }
+-            else if (var13.getResult() == Event$Result.ALLOW)
++            else if (var13.getResult() == Event.Result.ALLOW)
+             {
+                 if (entityhuman.abilities.canInstantlyBuild)
+                 {
+diff --git a/src/net/minecraft/server/ItemDye.java b/src/net/minecraft/server/ItemDye.java
+index d03791a..99ba6dc 100644
+--- a/src/net/minecraft/server/ItemDye.java
++++ b/src/net/minecraft/server/ItemDye.java
+@@ -3,7 +3,7 @@ package net.minecraft.server;
+ import java.util.List;
+ import net.minecraftforge.common.ForgeHooks;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.entity.player.BonemealEvent;
+ // CraftBukkit start
+ import org.bukkit.entity.Player;
+@@ -42,7 +42,7 @@ public class ItemDye extends Item {
+                 if (MinecraftForge.EVENT_BUS.post(var13))
+                     return false;
+ 
+-                if (var13.getResult() == Event$Result.ALLOW)
++                if (var13.getResult() == Event.Result.ALLOW)
+                 {
+                     if (!world.isStatic)
+                         --itemstack.count;
+diff --git a/src/net/minecraft/server/ItemHoe.java b/src/net/minecraft/server/ItemHoe.java
+index c1d611a..888443c 100644
+--- a/src/net/minecraft/server/ItemHoe.java
++++ b/src/net/minecraft/server/ItemHoe.java
+@@ -2,7 +2,7 @@ package net.minecraft.server;
+ 
+ import org.bukkit.craftbukkit.block.CraftBlockState; // CraftBukkit
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.entity.player.UseHoeEvent;
+ 
+ public class ItemHoe extends Item {
+@@ -27,7 +27,7 @@ public class ItemHoe extends Item {
+             {
+                 return false;
+             }
+-            else if (var11.getResult() == Event$Result.ALLOW)
++            else if (var11.getResult() == Event.Result.ALLOW)
+             {
+             	itemstack.damage(1, entityhuman);
+                 return true;
+diff --git a/src/net/minecraft/server/ItemInWorldManager.java b/src/net/minecraft/server/ItemInWorldManager.java
+index de095db..e2463b6 100644
+--- a/src/net/minecraft/server/ItemInWorldManager.java
++++ b/src/net/minecraft/server/ItemInWorldManager.java
+@@ -1,14 +1,13 @@
+ package net.minecraft.server;
+ 
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.ForgeEventFactory;
+ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+ 
+ // CraftBukkit start
+ import org.bukkit.event.block.BlockBreakEvent;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+-import org.bukkit.event.Event;
+ import org.bukkit.event.block.Action;
+ import org.bukkit.event.player.PlayerInteractEvent;
+ // CraftBukkit end
+@@ -129,7 +128,7 @@ public class ItemInWorldManager {
+             }
+             // CraftBukkit end
+             
+-            net.minecraftforge.event.entity.player.PlayerInteractEvent var5 = ForgeEventFactory.onPlayerInteract(this.player, net.minecraftforge.event.entity.player.PlayerInteractEvent$Action.LEFT_CLICK_BLOCK, i, j, k, l);
++            net.minecraftforge.event.entity.player.PlayerInteractEvent var5 = ForgeEventFactory.onPlayerInteract(this.player, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, i, j, k, l);
+ 
+             if (var5.isCanceled())
+             {
+@@ -153,13 +152,13 @@ public class ItemInWorldManager {
+                 if (var8 == null)
+                 	return;
+                 
+-                if (var5.useItem == Event$Result.DENY && f >= 1.0F)
++                if (var5.useItem == Event.Result.DENY && f >= 1.0F)
+                 {
+                 	this.player.netServerHandler.sendPacket(new Packet53BlockChange(i, j, k, this.world));
+                     return;
+                 }
+ 
+-                if (event.useInteractedBlock() == Event.Result.DENY) {
++                if (event.useInteractedBlock() == org.bukkit.event.Event.Result.DENY) {
+                     // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
+                     if (i1 == Block.WOODEN_DOOR.id) {
+                         // For some reason *BOTH* the bottom/top part have to be marked updated.
+@@ -169,7 +168,7 @@ public class ItemInWorldManager {
+                     } else if (i1 == Block.TRAP_DOOR.id) {
+                         ((EntityPlayer) this.player).netServerHandler.sendPacket(new Packet53BlockChange(i, j, k, this.world));
+                     }
+-                } else if (var8 != null && var5.useBlock != Event$Result.DENY) {
++                } else if (var8 != null && var5.useBlock != Event.Result.DENY) {
+                 	var8.attack(this.world, i, j, k, this.player);
+                     // Allow fire punching to be blocked
+                     this.world.douseFire((EntityHuman) null, i, j, k, l);
+@@ -179,7 +178,7 @@ public class ItemInWorldManager {
+ 
+                 // Handle hitting a block
+                 float toolDamage = var8.getDamage(this.player, this.world, i, j, k);
+-                if (event.useItemInHand() == Event.Result.DENY) {
++                if (event.useItemInHand() == org.bukkit.event.Event.Result.DENY) {
+                     // If we 'insta destroyed' then the client needs to be informed.
+                     if (toolDamage > 1.0f) {
+                         ((EntityPlayer) this.player).netServerHandler.sendPacket(new Packet53BlockChange(i, j, k, this.world));
+@@ -405,7 +404,7 @@ public class ItemInWorldManager {
+      */
+     public boolean interact(EntityHuman var1, World var2, ItemStack var3, int var4, int var5, int var6, int var7, float var8, float var9, float var10)
+     {
+-    	net.minecraftforge.event.entity.player.PlayerInteractEvent var11 = ForgeEventFactory.onPlayerInteract(var1, net.minecraftforge.event.entity.player.PlayerInteractEvent$Action.RIGHT_CLICK_BLOCK, var4, var5, var6, var7);
++    	net.minecraftforge.event.entity.player.PlayerInteractEvent var11 = ForgeEventFactory.onPlayerInteract(var1, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, var4, var5, var6, var7);
+ 
+         if (var11.isCanceled())
+         {
+@@ -433,7 +432,7 @@ public class ItemInWorldManager {
+ 
+                 if (var14 != null)
+                 {
+-                    if (var11.useBlock != Event$Result.DENY)
++                    if (var11.useBlock != Event.Result.DENY)
+                     {
+                     	// called below by bukkit
+                     	//result = var14.interact(var2, var4, var5, var6, var1, var7, var8, var9, var10);
+@@ -441,7 +440,7 @@ public class ItemInWorldManager {
+                     else
+                     {
+                         this.player.netServerHandler.sendPacket(new Packet53BlockChange(var4, var5, var6, this.world));
+-                        result = var11.useItem != Event$Result.ALLOW;
++                        result = var11.useItem != Event.Result.ALLOW;
+                     }
+                 }
+ 
+@@ -451,13 +450,13 @@ public class ItemInWorldManager {
+                     
+                     if (i1 > 0) {
+                         PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(var1, Action.RIGHT_CLICK_BLOCK, var4, var5, var6, var7, var3);
+-                        if (event.useInteractedBlock() == Event.Result.DENY) {
++                        if (event.useInteractedBlock() == org.bukkit.event.Event.Result.DENY) {
+                             // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
+                             if (i1 == Block.WOODEN_DOOR.id) {
+                                 boolean bottom = (world.getData(var4, var5, var6) & 8) == 0;
+                                 ((EntityPlayer) var1).netServerHandler.sendPacket(new Packet53BlockChange(var4, var5 + (bottom ? 1 : -1), var6, world));
+                             }
+-                            result = (event.useItemInHand() != Event.Result.ALLOW);
++                            result = (event.useItemInHand() != org.bukkit.event.Event.Result.ALLOW);
+                         } else {
+                             result = Block.byId[i1].interact(world, var4, var5, var6, var1, var7, var8, var9, var10);
+                         }
+@@ -476,7 +475,7 @@ public class ItemInWorldManager {
+                         }
+ 
+                         // If we have 'true' and no explicit deny *or* an explicit allow -- run the item part of the hook
+-                        if (var3 != null && ((!result && event.useItemInHand() != Event.Result.DENY) || event.useItemInHand() == Event.Result.ALLOW)) {
++                        if (var3 != null && ((!result && event.useItemInHand() != org.bukkit.event.Event.Result.DENY) || event.useItemInHand() == org.bukkit.event.Event.Result.ALLOW)) {
+                             this.useItem(var1, world, var3);
+                         }
+                     }
+diff --git a/src/net/minecraft/server/MinecraftServer.java b/src/net/minecraft/server/MinecraftServer.java
+index 9e276b5..6a1bb99 100644
+--- a/src/net/minecraft/server/MinecraftServer.java
++++ b/src/net/minecraft/server/MinecraftServer.java
+@@ -2,6 +2,7 @@ package net.minecraft.server;
+ 
+ import java.awt.GraphicsEnvironment;
+ import java.io.File;
++import java.io.IOException;
+ import java.security.KeyPair;
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+@@ -32,8 +33,7 @@ import org.bukkit.event.world.WorldSaveEvent;
+ 
+ import net.minecraftforge.common.DimensionManager;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.world.WorldEvent$Load;
+-import net.minecraftforge.event.world.WorldEvent$Unload;
++import net.minecraftforge.event.world.WorldEvent;
+ import java.util.Hashtable;
+ 
+ public abstract class MinecraftServer implements Runnable, IMojangStatistics, ICommandListener {
+@@ -130,6 +130,34 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
+ 
+         primaryThread = new ThreadServerApplication(this, "Server thread"); // Moved from main
+     }
++    
++    public static void consoleReaderResetPreLog()
++    {
++    	MinecraftServer serv = getServer();
++		if (Main.useJline && serv.reader != null) 
++		{
++			try {
++				serv.reader.print("\r");
++				serv.reader.flush();
++			} catch (IOException e) { }
++		}
++    }
++    
++    public static void consoleReaderResetPostLog()
++    {
++    	MinecraftServer serv = getServer();
++		if (Main.useJline && serv.reader != null) 
++		{
++			try {
++				serv.reader.drawLine();
++			} catch (Throwable ex) {
++				serv.reader.getCursorBuffer().clear();
++			}
++			try {
++				serv.reader.flush();
++			} catch (IOException e) { }
++		}
++    }
+ 
+     public abstract PropertyManager getPropertyManager();
+     // CraftBukkit end
+@@ -209,7 +237,7 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
+             this.t.setPlayerFileData(new WorldServer[] { world });
+             this.worlds.add(world);
+             
+-            MinecraftForge.EVENT_BUS.post(new WorldEvent$Load((World)world));
++            MinecraftForge.EVENT_BUS.post(new WorldEvent.Load((World)world));
+         }
+ 
+         this.t.setPlayerFileData(new WorldServer[] { mainWorld });
+@@ -336,7 +364,7 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
+             for (int j = 0; j < this.worlds.size(); ++j) 
+             {
+                 WorldServer worldserver = this.worlds.get(j);
+-                MinecraftForge.EVENT_BUS.post(new WorldEvent$Unload(worldserver));
++                MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(worldserver));
+                 DimensionManager.setWorld(worldserver.dimension, (WorldServer)null);
+             }
+             if (this.n != null && this.n.d()) {
+@@ -935,7 +963,7 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
+             // CraftBukkit end
+ 
+             if (worldserver != null) {
+-            	MinecraftForge.EVENT_BUS.post(new WorldEvent$Unload(worldserver));
++            	MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(worldserver));
+                 worldserver.saveLevel();
+             }
+         }
+diff --git a/src/net/minecraft/server/NBTCompressedStreamTools.java b/src/net/minecraft/server/NBTCompressedStreamTools.java
+index 9890df4..8c50a9c 100644
+--- a/src/net/minecraft/server/NBTCompressedStreamTools.java
++++ b/src/net/minecraft/server/NBTCompressedStreamTools.java
+@@ -29,7 +29,7 @@ public class NBTCompressedStreamTools
+ 
+         try
+         {
+-            return a(var1);
++            return a((DataInput)var1);
+         }
+         finally
+         {
+@@ -46,7 +46,7 @@ public class NBTCompressedStreamTools
+ 
+         try
+         {
+-            a(var0, var2);
++            a(var0, (DataOutput)var2);
+         }
+         finally
+         {
+@@ -61,7 +61,7 @@ public class NBTCompressedStreamTools
+ 
+         try
+         {
+-            var2 = a(var1);
++            var2 = a((DataInput)var1);
+         }
+         finally
+         {
+@@ -78,7 +78,7 @@ public class NBTCompressedStreamTools
+ 
+         try
+         {
+-            a(var0, var2);
++            a(var0, (DataOutput)var2);
+         }
+         finally
+         {
+@@ -91,7 +91,7 @@ public class NBTCompressedStreamTools
+     /**
+      * Reads from a CompressedStream.
+      */
+-    public static NBTTagCompound a(DataInputStream var0) throws IOException
++    public static NBTTagCompound a(DataInput var0) throws IOException
+     {
+         NBTBase var1 = NBTBase.b(var0);
+ 
+@@ -105,7 +105,7 @@ public class NBTCompressedStreamTools
+         }
+     }
+ 
+-    public static void a(NBTTagCompound var0, DataOutputStream var1) throws IOException
++    public static void a(NBTTagCompound var0, DataOutput var1) throws IOException
+     {
+         NBTBase.a(var0, var1);
+     }
+@@ -116,7 +116,7 @@ public class NBTCompressedStreamTools
+ 
+         try
+         {
+-            a(var0, var2);
++            a(var0, (DataOutput)var2);
+         }
+         finally
+         {
+@@ -137,7 +137,7 @@ public class NBTCompressedStreamTools
+ 
+             try
+             {
+-                var2 = a(var1);
++                var2 = a((DataInput)var1);
+             }
+             finally
+             {
+diff --git a/src/net/minecraft/server/NetServerHandler.java b/src/net/minecraft/server/NetServerHandler.java
+index 5835af7..af59c96 100644
+--- a/src/net/minecraft/server/NetServerHandler.java
++++ b/src/net/minecraft/server/NetServerHandler.java
+@@ -1,10 +1,10 @@
+ package net.minecraft.server;
+ 
+ import cpw.mods.fml.common.network.FMLNetworkHandler;
+-import net.minecraftforge.event.Event$Result;
++import net.minecraftforge.event.Event;
+ import net.minecraftforge.event.ForgeEventFactory;
+ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
++import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+ import java.io.ByteArrayInputStream;
+ import java.io.DataInputStream;
+ import java.io.IOException;
+@@ -28,8 +28,6 @@ import org.bukkit.craftbukkit.util.Waitable;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.entity.Player;
+-import org.bukkit.event.Event;
+-import org.bukkit.event.block.Action;
+ import org.bukkit.event.block.SignChangeEvent;
+ import org.bukkit.event.player.AsyncPlayerChatEvent;
+ import org.bukkit.event.player.PlayerAnimationEvent;
+@@ -567,9 +565,9 @@ public class NetServerHandler extends NetHandler {
+             if (packet14blockdig.e == 0) {
+                 // CraftBukkit start
+                 if (i1 < this.server.getSpawnRadius() && !flag) {
+-                    CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, i, j, k, l, this.player.inventory.getItemInHand());
++                    CraftEventFactory.callPlayerInteractEvent(this.player, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK, i, j, k, l, this.player.inventory.getItemInHand());
+                     // CraftBukkit end
+-                    ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent$Action.LEFT_CLICK_BLOCK, i, j, k, 0);
++                    ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, i, j, k, 0);
+                     this.player.netServerHandler.sendPacket(new Packet53BlockChange(i, j, k, worldserver));
+                 } else {
+                     this.player.itemInWorldManager.dig(i, j, k, packet14blockdig.face);
+@@ -643,9 +641,9 @@ public class NetServerHandler extends NetHandler {
+ 
+             // CraftBukkit start
+             int itemstackAmount = itemstack.count;
+-            org.bukkit.event.player.PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(this.player, Action.RIGHT_CLICK_AIR, itemstack);
+-            PlayerInteractEvent var10 = ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent$Action.RIGHT_CLICK_AIR, 0, 0, 0, -1);
+-           if (event.useItemInHand() != Event.Result.DENY && var10.useItem != Event$Result.DENY) {
++            org.bukkit.event.player.PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(this.player, org.bukkit.event.block.Action.RIGHT_CLICK_AIR, itemstack);
++            PlayerInteractEvent var10 = ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.RIGHT_CLICK_AIR, 0, 0, 0, -1);
++           if (event.useItemInHand() != org.bukkit.event.Event.Result.DENY && var10.useItem != Event.Result.DENY) {
+                 this.player.itemInWorldManager.useItem(this.player, this.player.world, itemstack);
+             }
+ 
+@@ -977,7 +975,7 @@ public class NetServerHandler extends NetHandler {
+             MovingObjectPosition movingobjectposition = this.player.world.rayTrace(vec3d, vec3d1, true);
+ 
+             if (movingobjectposition == null || movingobjectposition.type != EnumMovingObjectType.TILE) {
+-                CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand());
++                CraftEventFactory.callPlayerInteractEvent(this.player, org.bukkit.event.block.Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand());
+             }
+ 
+             // Arm swing animation
+diff --git a/src/net/minecraft/server/World.java b/src/net/minecraft/server/World.java
+index 4846d7f..b0a2f2b 100644
+--- a/src/net/minecraft/server/World.java
++++ b/src/net/minecraft/server/World.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import ee.lutsu.alpha.minecraft.*;
+ import java.util.ArrayList;
+ import java.util.Calendar;
+ import java.util.Collection;
+@@ -32,7 +33,7 @@ import net.minecraftforge.common.ForgeChunkManager;
+ import net.minecraftforge.common.ForgeDirection;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.common.WorldSpecificSaveHandler;
+-import net.minecraftforge.event.entity.EntityEvent$CanUpdate;
++import net.minecraftforge.event.entity.EntityEvent;
+ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+ import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+ 
+@@ -41,13 +42,13 @@ public abstract class World implements IBlockAccess {
+ 	public static double MAX_ENTITY_RADIUS = 2.0D;
+ 	public final WorldMapCollection perWorldStorage;
+ 	public boolean d = false;
+-	public List entityList = new ArrayList();
+-	protected List f = new ArrayList();
+-	public List tileEntityList = new ArrayList();
+-	private List a = new ArrayList();
+-	private List b = new ArrayList();
+-	public List players = new ArrayList();
+-	public List i = new ArrayList();
++	public List entityList = new TList();
++	protected List f = new TList();
++	public List tileEntityList = new TList();
++	private List a = new TList();
++	private List b = new TList();
++	public List players = new TList();
++	public List i = new TList();
+ 	private long c = 16777215L;
+ 	public int j = 0;
+ 	protected int k = (new Random()).nextInt();
+@@ -62,7 +63,7 @@ public abstract class World implements IBlockAccess {
+ 	public int difficulty;
+ 	public Random random = new Random();
+ 	public WorldProvider worldProvider; // CraftBukkit - remove final
+-	protected List w = new ArrayList();
++	protected List w = new TList();
+ 	public IChunkProvider chunkProvider; // CraftBukkit - protected -> public
+ 	protected final IDataManager dataManager;
+ 	public WorldData worldData; // CraftBukkit - protected -> public
+@@ -88,6 +89,64 @@ public abstract class World implements IBlockAccess {
+ 	public boolean isStatic;
+ 	private static WorldMapCollection s_mapStorage;
+ 	private static IDataManager s_savehandler;
++	
++	// Alpha's stuff
++	public ArrayList<BlockChangeHandler> blockChangeHandlers = new ArrayList<BlockChangeHandler>();
++	public ArrayList<EntityTickHandler> entityTickHandlers = new ArrayList<EntityTickHandler>();
++	
++    private void handleBlockUpdate(int x, int y, int z, int type, int data)
++    {
++    	for(BlockChangeHandler eh : blockChangeHandlers)
++    		eh.blockChanged(this, x, y, z, type, data);
++    }
++    
++    private boolean handleTickStart()
++    {
++    	boolean ret = true;
++    	for(EntityTickHandler th : entityTickHandlers)
++    		if (!th.tickStart(this))
++    			ret = false;
++    	
++    	return ret;
++    }
++    
++    private boolean handleLivingTickStart(Entity e)
++    {
++    	boolean ret = true;
++    	for(EntityTickHandler th : entityTickHandlers)
++    		if (!th.livingEntityTickStart(this, e))
++    			ret = false;
++    	
++    	return ret;
++    }
++    private boolean handleTileTickStart(TileEntity e)
++    {
++    	boolean ret = true;
++    	for(EntityTickHandler th : entityTickHandlers)
++    		if (!th.tileEntityTickStart(this, e))
++    			ret = false;
++    	
++    	return ret;
++    }
++    
++    private void handleTickEnd()
++    {
++    	for(EntityTickHandler th : entityTickHandlers)
++    		th.tickEnd(this);
++    }
++    
++    private void handleLivingTickEnd(Entity e)
++    {
++    	for(EntityTickHandler th : entityTickHandlers)
++    		th.livingEntityTickEnd(this, e);
++    }
++    
++    private void handleTileTickEnd(TileEntity e)
++    {
++    	for(EntityTickHandler th : entityTickHandlers)
++    		th.tileEntityTickEnd(this, e);
++    }
++	// end alpha's methods
+ 
+ 	public BiomeBase getBiome(int i, int j) 
+ 	{
+@@ -295,6 +354,8 @@ public abstract class World implements IBlockAccess {
+ 			} else if (j >= 256) {
+ 				return false;
+ 			} else {
++				handleBlockUpdate(i, j, k, l, i1);
++				
+ 				Chunk chunk = this.getChunkAt(i >> 4, k >> 4);
+ 				boolean flag1 = chunk.a(i & 15, j, k & 15, l, i1);
+ 
+@@ -319,6 +380,8 @@ public abstract class World implements IBlockAccess {
+ 			} else if (j >= 256) {
+ 				return false;
+ 			} else {
++				handleBlockUpdate(i, j, k, l, 0);
++				
+ 				Chunk chunk = this.getChunkAt(i >> 4, k >> 4);
+ 				boolean flag = chunk.a(i & 15, j, k & 15, l);
+ 
+@@ -1135,6 +1198,10 @@ public abstract class World implements IBlockAccess {
+ 	public void b(int i, int j, int k, int l, int i1) {}
+ 
+ 	public void tickEntities() {
++		
++		if (!handleTickStart())
++			return;
++		
+ 		this.methodProfiler.a("entities");
+ 		this.methodProfiler.a("global");
+ 
+@@ -1240,7 +1307,11 @@ public abstract class World implements IBlockAccess {
+ 			// CraftBukkit end
+ 
+ 			if (!tileentity.r() && tileentity.o() && this.isLoaded(tileentity.x, tileentity.y, tileentity.z)) {
+-				tileentity.g();
++				
++				if (handleTileTickStart(tileentity))
++					tileentity.g();
++				
++				handleTileTickEnd(tileentity);
+ 			}
+ 
+ 			if (tileentity.r()) {
+@@ -1306,6 +1377,8 @@ public abstract class World implements IBlockAccess {
+ 
+ 		this.methodProfiler.b();
+ 		this.methodProfiler.b();
++		
++		handleTickEnd();
+ 	}
+ 
+     public void a(Collection var1)
+@@ -1342,7 +1415,7 @@ public abstract class World implements IBlockAccess {
+ 
+         if (!var7)
+         {
+-            EntityEvent$CanUpdate var8 = new EntityEvent$CanUpdate(var1);
++            EntityEvent.CanUpdate var8 = new EntityEvent.CanUpdate(var1);
+             MinecraftForge.EVENT_BUS.post(var8);
+             var7 = var8.canUpdate;
+         }
+@@ -1357,14 +1430,18 @@ public abstract class World implements IBlockAccess {
+ 
+             if (var2 && var1.ah)
+             {
+-                if (var1.vehicle != null)
+-                {
+-                    var1.U();
+-                }
+-                else
+-                {
+-                    var1.j_();
+-                }
++            	if (handleLivingTickStart(var1))
++            	{
++	                if (var1.vehicle != null)
++	                {
++	                    var1.U();
++	                }
++	                else
++	                {
++	                    var1.j_();
++	                }
++            	}
++            	handleLivingTickEnd(var1);
+             }
+ 
+             this.methodProfiler.a("chunkCheck");
+diff --git a/src/net/minecraft/server/WorldGenStrongholdPieces.java b/src/net/minecraft/server/WorldGenStrongholdPieces.java
+index f526ae1..2e8e921 100644
+--- a/src/net/minecraft/server/WorldGenStrongholdPieces.java
++++ b/src/net/minecraft/server/WorldGenStrongholdPieces.java
+@@ -78,10 +78,6 @@ public class WorldGenStrongholdPieces
+     java.lang.NoSuchMethodError: net.minecraft.server.WorldGenStrongholdPieces.a(Lnet/minecraft/server/WorldGenStrongholdStart;Ljava/util/List;Ljava/util/Random;IIIII)Lnet/minecraft/server/StructurePiece;
+     	at net.minecraft.server.WorldGenStrongholdPiece.a(SourceFile:280)
+    */
+-  public static StructurePiece a(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5)
+-  {
+-	  return (StructurePiece)b(paramWorldGenStrongholdStart, paramList, paramRandom, paramInt1, paramInt2, paramInt3, paramInt4, paramInt5);
+-  }
+ 
+   private static WorldGenStrongholdPiece b(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5)
+   {
+@@ -135,7 +131,7 @@ public class WorldGenStrongholdPieces
+     return null;
+   }
+ 
+-  private static StructurePiece c(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5) {
++  public static StructurePiece a(WorldGenStrongholdStart paramWorldGenStrongholdStart, List paramList, Random paramRandom, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5) {
+     if (paramInt5 > 50) {
+       return null;
+     }
+diff --git a/src/net/minecraft/server/WorldServer.java b/src/net/minecraft/server/WorldServer.java
+index 3816302..f39868a 100644
+--- a/src/net/minecraft/server/WorldServer.java
++++ b/src/net/minecraft/server/WorldServer.java
+@@ -3,7 +3,7 @@ package net.minecraft.server;
+ import net.minecraftforge.common.ChestGenHooks;
+ import net.minecraftforge.common.DimensionManager;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.world.WorldEvent$Save;
++import net.minecraftforge.event.world.WorldEvent;
+ import java.io.File;
+ 
+ import java.util.ArrayList;
+@@ -724,7 +724,7 @@ public class WorldServer extends World implements org.bukkit.BlockChangeDelegate
+             }
+ 
+             this.chunkProvider.saveChunks(flag, iprogressupdate);
+-            MinecraftForge.EVENT_BUS.post(new WorldEvent$Save(this));
++            MinecraftForge.EVENT_BUS.post(new WorldEvent.Save(this));
+         }
+     }
+ 
+diff --git a/src/net/minecraftforge/common/DimensionManager.java b/src/net/minecraftforge/common/DimensionManager.java
+index 0863178..e8392f6 100644
+--- a/src/net/minecraftforge/common/DimensionManager.java
++++ b/src/net/minecraftforge/common/DimensionManager.java
+@@ -28,8 +28,9 @@ import net.minecraft.server.WorldProviderNormal;
+ import net.minecraft.server.WorldProviderTheEnd;
+ import net.minecraft.server.WorldServer;
+ import net.minecraft.server.WorldSettings;
+-import net.minecraftforge.event.world.WorldEvent$Load;
+-import net.minecraftforge.event.world.WorldEvent$Unload;
++import net.minecraftforge.event.world.WorldEvent;
++import net.minecraftforge.event.world.WorldEvent.Load;
++import net.minecraftforge.event.world.WorldEvent.Unload;
+ 
+ public class DimensionManager
+ {
+@@ -197,7 +198,7 @@ public class DimensionManager
+     	world.worldProvider.setDimension(dim);
+     	
+     	mcServer.server.getPluginManager().callEvent(new org.bukkit.event.world.WorldInitEvent(world.getWorld()));
+-    	MinecraftForge.EVENT_BUS.post(new WorldEvent$Load(world));
++    	MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));
+     	
+     	if (!mcServer.I())
+     		world.getWorldData().setGameType(mcServer.getGamemode());
+@@ -273,7 +274,7 @@ public class DimensionManager
+                 var4.printStackTrace();
+             }
+ 
+-            MinecraftForge.EVENT_BUS.post(new WorldEvent$Unload((World)worlds.get(Integer.valueOf(var2))));
++            MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload((World)worlds.get(Integer.valueOf(var2))));
+             ((WorldServer)worlds.get(Integer.valueOf(var2))).saveLevel();
+             setWorld(var2, (WorldServer)null);
+         }
+diff --git a/src/net/minecraftforge/common/ForgeHooks.java b/src/net/minecraftforge/common/ForgeHooks.java
+index 1602038..6f9ee46 100644
+--- a/src/net/minecraftforge/common/ForgeHooks.java
++++ b/src/net/minecraftforge/common/ForgeHooks.java
+@@ -27,8 +27,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
+ import net.minecraftforge.event.entity.living.LivingAttackEvent;
+ import net.minecraftforge.event.entity.living.LivingDeathEvent;
+ import net.minecraftforge.event.entity.living.LivingDropsEvent;
+-import net.minecraftforge.event.entity.living.LivingEvent$LivingJumpEvent;
+-import net.minecraftforge.event.entity.living.LivingEvent$LivingUpdateEvent;
++import net.minecraftforge.event.entity.living.LivingEvent;
+ import net.minecraftforge.event.entity.living.LivingFallEvent;
+ import net.minecraftforge.event.entity.living.LivingHurtEvent;
+ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+@@ -285,7 +284,7 @@ public class ForgeHooks
+ 
+     public static boolean onLivingUpdate(EntityLiving var0)
+     {
+-        return MinecraftForge.EVENT_BUS.post(new LivingEvent$LivingUpdateEvent(var0));
++        return MinecraftForge.EVENT_BUS.post(new LivingEvent.LivingUpdateEvent(var0));
+     }
+ 
+     public static boolean onLivingAttack(EntityLiving var0, DamageSource var1, int var2)
+@@ -322,7 +321,7 @@ public class ForgeHooks
+ 
+     public static void onLivingJump(EntityLiving var0)
+     {
+-        MinecraftForge.EVENT_BUS.post(new LivingEvent$LivingJumpEvent(var0));
++        MinecraftForge.EVENT_BUS.post(new LivingEvent.LivingJumpEvent(var0));
+     }
+ 
+     public static EntityItem onPlayerTossEvent(EntityHuman var0, ItemStack var1)
+diff --git a/src/net/minecraftforge/common/ForgeInternalHandler.java b/src/net/minecraftforge/common/ForgeInternalHandler.java
+index e3845a2..0e8e63a 100644
+--- a/src/net/minecraftforge/common/ForgeInternalHandler.java
++++ b/src/net/minecraftforge/common/ForgeInternalHandler.java
+@@ -6,8 +6,7 @@ import net.minecraft.server.ItemStack;
+ import net.minecraftforge.event.EventPriority;
+ import net.minecraftforge.event.ForgeSubscribe;
+ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+-import net.minecraftforge.event.world.WorldEvent$Load;
+-import net.minecraftforge.event.world.WorldEvent$Save;
++import net.minecraftforge.event.world.WorldEvent;
+ 
+ public class ForgeInternalHandler
+ {
+@@ -51,7 +50,7 @@ public class ForgeInternalHandler
+     @ForgeSubscribe(
+             priority = EventPriority.HIGHEST
+     )
+-    public void onDimensionLoad(WorldEvent$Load var1)
++    public void onDimensionLoad(WorldEvent.Load var1)
+     {
+         ForgeChunkManager.loadWorld(var1.world);
+     }
+@@ -59,7 +58,7 @@ public class ForgeInternalHandler
+     @ForgeSubscribe(
+             priority = EventPriority.HIGHEST
+     )
+-    public void onDimensionSave(WorldEvent$Save var1)
++    public void onDimensionSave(WorldEvent.Save var1)
+     {
+         ForgeChunkManager.saveWorld(var1.world);
+     }
+diff --git a/src/net/minecraftforge/event/Event$HasResult.java b/src/net/minecraftforge/event/Event$HasResult.java
+deleted file mode 100644
+index 699f7ff..0000000
+--- a/src/net/minecraftforge/event/Event$HasResult.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package net.minecraftforge.event;
+-
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+-@Retention(RetentionPolicy.RUNTIME)
+-@Target( {ElementType.TYPE})
+-public @interface Event$HasResult
+-{
+-}
+diff --git a/src/net/minecraftforge/event/Event$Result.java b/src/net/minecraftforge/event/Event$Result.java
+deleted file mode 100644
+index db57371..0000000
+--- a/src/net/minecraftforge/event/Event$Result.java
++++ /dev/null
+@@ -1,8 +0,0 @@
+-package net.minecraftforge.event;
+-
+-public enum Event$Result
+-{
+-    DENY,
+-    DEFAULT,
+-    ALLOW;
+-}
+diff --git a/src/net/minecraftforge/event/Event.java b/src/net/minecraftforge/event/Event.java
+index 70fb35f..c4ac458 100644
+--- a/src/net/minecraftforge/event/Event.java
++++ b/src/net/minecraftforge/event/Event.java
+@@ -1,22 +1,24 @@
+ package net.minecraftforge.event;
+ 
+-import net.minecraftforge.event.Event$HasResult;
+-import net.minecraftforge.event.Event$Result;
++import java.lang.annotation.ElementType;
++import java.lang.annotation.Retention;
++import java.lang.annotation.RetentionPolicy;
++import java.lang.annotation.Target;
+ 
+ public class Event
+ {
+     private boolean isCanceled = false;
+     private final boolean isCancelable;
+-    private Event$Result result;
++    private Result result;
+     private final boolean hasResult;
+     private static ListenerList listeners = new ListenerList();
+ 
+     public Event()
+     {
+-        this.result = Event$Result.DEFAULT;
++        this.result = Result.DEFAULT;
+         this.setup();
+         this.isCancelable = this.hasAnnotation(Cancelable.class);
+-        this.hasResult = this.hasAnnotation(Event$HasResult.class);
++        this.hasResult = this.hasAnnotation(HasResult.class);
+     }
+ 
+     private boolean hasAnnotation(Class var1)
+@@ -59,12 +61,12 @@ public class Event
+         return this.hasResult;
+     }
+ 
+-    public Event$Result getResult()
++    public Result getResult()
+     {
+         return this.result;
+     }
+ 
+-    public void setResult(Event$Result var1)
++    public void setResult(Result var1)
+     {
+         this.result = var1;
+     }
+@@ -75,4 +77,17 @@ public class Event
+     {
+         return listeners;
+     }
++    
++    public static enum Result
++    {
++        DENY,
++        DEFAULT,
++        ALLOW;
++    }
++    
++    @Retention(RetentionPolicy.RUNTIME)
++    @Target( {ElementType.TYPE})
++    public static @interface HasResult
++    {
++    }
+ }
+diff --git a/src/net/minecraftforge/event/ForgeEventFactory.java b/src/net/minecraftforge/event/ForgeEventFactory.java
+index f75e439..cd6aec3 100644
+--- a/src/net/minecraftforge/event/ForgeEventFactory.java
++++ b/src/net/minecraftforge/event/ForgeEventFactory.java
+@@ -5,27 +5,25 @@ import net.minecraft.server.EntityHuman;
+ import net.minecraft.server.ItemStack;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+-import net.minecraftforge.event.entity.player.PlayerEvent$BreakSpeed;
+-import net.minecraftforge.event.entity.player.PlayerEvent$HarvestCheck;
++import net.minecraftforge.event.entity.player.PlayerEvent;
+ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+-import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
+ 
+ public class ForgeEventFactory
+ {
+     public static boolean doPlayerHarvestCheck(EntityHuman var0, Block var1, boolean var2)
+     {
+-        PlayerEvent$HarvestCheck var3 = new PlayerEvent$HarvestCheck(var0, var1, var2);
++        PlayerEvent.HarvestCheck var3 = new PlayerEvent.HarvestCheck(var0, var1, var2);
+         MinecraftForge.EVENT_BUS.post(var3);
+         return var3.success;
+     }
+ 
+     public static float getBreakSpeed(EntityHuman var0, Block var1, int var2, float var3)
+     {
+-        PlayerEvent$BreakSpeed var4 = new PlayerEvent$BreakSpeed(var0, var1, var2, var3);
++        PlayerEvent.BreakSpeed var4 = new PlayerEvent.BreakSpeed(var0, var1, var2, var3);
+         return MinecraftForge.EVENT_BUS.post(var4) ? -1.0F : var4.newSpeed;
+     }
+ 
+-    public static PlayerInteractEvent onPlayerInteract(EntityHuman var0, PlayerInteractEvent$Action var1, int var2, int var3, int var4, int var5)
++    public static PlayerInteractEvent onPlayerInteract(EntityHuman var0, PlayerInteractEvent.Action var1, int var2, int var3, int var4, int var5)
+     {
+         PlayerInteractEvent var6 = new PlayerInteractEvent(var0, var1, var2, var3, var4, var5);
+         MinecraftForge.EVENT_BUS.post(var6);
+diff --git a/src/net/minecraftforge/event/ListenerList$1.java b/src/net/minecraftforge/event/ListenerList$1.java
+deleted file mode 100644
+index 280c49a..0000000
+--- a/src/net/minecraftforge/event/ListenerList$1.java
++++ /dev/null
+@@ -1,5 +0,0 @@
+-package net.minecraftforge.event;
+-
+-class ListenerList$1
+-{
+-}
+diff --git a/src/net/minecraftforge/event/ListenerList$ListenerListInst.java b/src/net/minecraftforge/event/ListenerList$ListenerListInst.java
+deleted file mode 100644
+index cd7797b..0000000
+--- a/src/net/minecraftforge/event/ListenerList$ListenerListInst.java
++++ /dev/null
+@@ -1,120 +0,0 @@
+-package net.minecraftforge.event;
+-
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.Iterator;
+-import net.minecraftforge.event.ListenerList$1;
+-
+-class ListenerList$ListenerListInst
+-{
+-    private boolean rebuild;
+-    private IEventListener[] listeners;
+-    private ArrayList priorities;
+-    private ListenerList$ListenerListInst parent;
+-
+-    final ListenerList this$0;
+-
+-    private ListenerList$ListenerListInst(ListenerList var1)
+-    {
+-        this.this$0 = var1;
+-        this.rebuild = true;
+-        int var2 = EventPriority.values().length;
+-        this.priorities = new ArrayList(var2);
+-
+-        for (int var3 = 0; var3 < var2; ++var3)
+-        {
+-            this.priorities.add(new ArrayList());
+-        }
+-    }
+-
+-    public void dispose()
+-    {
+-        Iterator var1 = this.priorities.iterator();
+-
+-        while (var1.hasNext())
+-        {
+-            ArrayList var2 = (ArrayList)var1.next();
+-            var2.clear();
+-        }
+-
+-        this.priorities.clear();
+-        this.parent = null;
+-        this.listeners = null;
+-    }
+-
+-    private ListenerList$ListenerListInst(ListenerList var1, ListenerList$ListenerListInst var2)
+-    {
+-        this(var1);
+-        this.parent = var2;
+-    }
+-
+-    public ArrayList getListeners(EventPriority var1)
+-    {
+-        ArrayList var2 = new ArrayList((Collection)this.priorities.get(var1.ordinal()));
+-
+-        if (this.parent != null)
+-        {
+-            var2.addAll(this.parent.getListeners(var1));
+-        }
+-
+-        return var2;
+-    }
+-
+-    public IEventListener[] getListeners()
+-    {
+-        if (this.shouldRebuild())
+-        {
+-            this.buildCache();
+-        }
+-
+-        return this.listeners;
+-    }
+-
+-    protected boolean shouldRebuild()
+-    {
+-        return this.rebuild || this.parent != null && this.parent.shouldRebuild();
+-    }
+-
+-    private void buildCache()
+-    {
+-        ArrayList var1 = new ArrayList();
+-        EventPriority[] var2 = EventPriority.values();
+-        int var3 = var2.length;
+-
+-        for (int var4 = 0; var4 < var3; ++var4)
+-        {
+-            EventPriority var5 = var2[var4];
+-            var1.addAll(this.getListeners(var5));
+-        }
+-
+-        this.listeners = (IEventListener[])var1.toArray(new IEventListener[0]);
+-        this.rebuild = false;
+-    }
+-
+-    public void register(EventPriority var1, IEventListener var2)
+-    {
+-        ((ArrayList)this.priorities.get(var1.ordinal())).add(var2);
+-        this.rebuild = true;
+-    }
+-
+-    public void unregister(IEventListener var1)
+-    {
+-        Iterator var2 = this.priorities.iterator();
+-
+-        while (var2.hasNext())
+-        {
+-            ArrayList var3 = (ArrayList)var2.next();
+-            var3.remove(var1);
+-        }
+-    }
+-
+-    ListenerList$ListenerListInst(ListenerList var1, ListenerList$ListenerListInst var2, ListenerList$1 var3)
+-    {
+-        this(var1, var2);
+-    }
+-
+-    ListenerList$ListenerListInst(ListenerList var1, ListenerList$1 var2)
+-    {
+-        this(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/ListenerList.java b/src/net/minecraftforge/event/ListenerList.java
+index 37cd1c4..f2884e1 100644
+--- a/src/net/minecraftforge/event/ListenerList.java
++++ b/src/net/minecraftforge/event/ListenerList.java
+@@ -1,16 +1,15 @@
+ package net.minecraftforge.event;
+ 
+ import java.util.ArrayList;
++import java.util.Collection;
+ import java.util.Iterator;
+-import net.minecraftforge.event.ListenerList$1;
+-import net.minecraftforge.event.ListenerList$ListenerListInst;
+ 
+ public class ListenerList
+ {
+     private static ArrayList allLists = new ArrayList();
+     private static int maxSize = 0;
+     private ListenerList parent;
+-    private ListenerList$ListenerListInst[] lists = new ListenerList$ListenerListInst[0];
++    private ListenerListInst[] lists = new ListenerListInst[0];
+ 
+     public ListenerList()
+     {
+@@ -50,7 +49,7 @@ public class ListenerList
+ 
+         if (this.lists.length < var1)
+         {
+-            ListenerList$ListenerListInst[] var2 = new ListenerList$ListenerListInst[var1];
++            ListenerListInst[] var2 = new ListenerListInst[var1];
+             int var3;
+ 
+             for (var3 = 0; var3 < this.lists.length; ++var3)
+@@ -62,11 +61,11 @@ public class ListenerList
+             {
+                 if (this.parent != null)
+                 {
+-                    var2[var3] = new ListenerList$ListenerListInst(this, this.parent.getInstance(var3), (ListenerList$1)null);
++                    var2[var3] = new ListenerListInst(this, this.parent.getInstance(var3));
+                 }
+                 else
+                 {
+-                    var2[var3] = new ListenerList$ListenerListInst(this, (ListenerList$1)null);
++                    var2[var3] = new ListenerListInst(this);
+                 }
+             }
+ 
+@@ -85,7 +84,7 @@ public class ListenerList
+         }
+     }
+ 
+-    protected ListenerList$ListenerListInst getInstance(int var1)
++    protected ListenerListInst getInstance(int var1)
+     {
+         return this.lists[var1];
+     }
+@@ -115,4 +114,108 @@ public class ListenerList
+             var3.unregister(var0, var1);
+         }
+     }
++    
++    static class ListenerListInst
++    {
++        private boolean rebuild;
++        private IEventListener[] listeners;
++        private ArrayList priorities;
++        private ListenerListInst parent;
++
++        final ListenerList this$0;
++
++        private ListenerListInst(ListenerList var1)
++        {
++            this.this$0 = var1;
++            this.rebuild = true;
++            int var2 = EventPriority.values().length;
++            this.priorities = new ArrayList(var2);
++
++            for (int var3 = 0; var3 < var2; ++var3)
++            {
++                this.priorities.add(new ArrayList());
++            }
++        }
++
++        public void dispose()
++        {
++            Iterator var1 = this.priorities.iterator();
++
++            while (var1.hasNext())
++            {
++                ArrayList var2 = (ArrayList)var1.next();
++                var2.clear();
++            }
++
++            this.priorities.clear();
++            this.parent = null;
++            this.listeners = null;
++        }
++
++        private ListenerListInst(ListenerList var1, ListenerListInst var2)
++        {
++            this(var1);
++            this.parent = var2;
++        }
++
++        public ArrayList getListeners(EventPriority var1)
++        {
++            ArrayList var2 = new ArrayList((Collection)this.priorities.get(var1.ordinal()));
++
++            if (this.parent != null)
++            {
++                var2.addAll(this.parent.getListeners(var1));
++            }
++
++            return var2;
++        }
++
++        public IEventListener[] getListeners()
++        {
++            if (this.shouldRebuild())
++            {
++                this.buildCache();
++            }
++
++            return this.listeners;
++        }
++
++        protected boolean shouldRebuild()
++        {
++            return this.rebuild || this.parent != null && this.parent.shouldRebuild();
++        }
++
++        private void buildCache()
++        {
++            ArrayList var1 = new ArrayList();
++            EventPriority[] var2 = EventPriority.values();
++            int var3 = var2.length;
++
++            for (int var4 = 0; var4 < var3; ++var4)
++            {
++                EventPriority var5 = var2[var4];
++                var1.addAll(this.getListeners(var5));
++            }
++
++            this.listeners = (IEventListener[])var1.toArray(new IEventListener[0]);
++            this.rebuild = false;
++        }
++
++        public void register(EventPriority var1, IEventListener var2)
++        {
++            ((ArrayList)this.priorities.get(var1.ordinal())).add(var2);
++            this.rebuild = true;
++        }
++
++        public void unregister(IEventListener var1)
++        {
++            Iterator var2 = this.priorities.iterator();
++
++            while (var2.hasNext())
++            {
++                ArrayList var3 = (ArrayList)var2.next();
++                var3.remove(var1);
++            }
++        }
++    }
+ }
+diff --git a/src/net/minecraftforge/event/entity/EntityEvent$CanUpdate.java b/src/net/minecraftforge/event/entity/EntityEvent$CanUpdate.java
+deleted file mode 100644
+index 77bc722..0000000
+--- a/src/net/minecraftforge/event/entity/EntityEvent$CanUpdate.java
++++ /dev/null
+@@ -1,13 +0,0 @@
+-package net.minecraftforge.event.entity;
+-
+-import net.minecraft.server.Entity;
+-
+-public class EntityEvent$CanUpdate extends EntityEvent
+-{
+-    public boolean canUpdate = false;
+-
+-    public EntityEvent$CanUpdate(Entity var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/EntityEvent$EnteringChunk.java b/src/net/minecraftforge/event/entity/EntityEvent$EnteringChunk.java
+deleted file mode 100644
+index f25e2cf..0000000
+--- a/src/net/minecraftforge/event/entity/EntityEvent$EnteringChunk.java
++++ /dev/null
+@@ -1,20 +0,0 @@
+-package net.minecraftforge.event.entity;
+-
+-import net.minecraft.server.Entity;
+-
+-public class EntityEvent$EnteringChunk extends EntityEvent
+-{
+-    public int newChunkX;
+-    public int newChunkZ;
+-    public int oldChunkX;
+-    public int oldChunkZ;
+-
+-    public EntityEvent$EnteringChunk(Entity var1, int var2, int var3, int var4, int var5)
+-    {
+-        super(var1);
+-        this.newChunkX = var2;
+-        this.newChunkZ = var3;
+-        this.oldChunkX = var4;
+-        this.oldChunkZ = var5;
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/EntityEvent.java b/src/net/minecraftforge/event/entity/EntityEvent.java
+index 0910859..14bc027 100644
+--- a/src/net/minecraftforge/event/entity/EntityEvent.java
++++ b/src/net/minecraftforge/event/entity/EntityEvent.java
+@@ -11,4 +11,32 @@ public class EntityEvent extends Event
+     {
+         this.entity = var1;
+     }
++    
++    public static class CanUpdate extends EntityEvent
++    {
++        public boolean canUpdate = false;
++
++        public CanUpdate(Entity var1)
++        {
++            super(var1);
++        }
++    }
++    
++    public static class EnteringChunk extends EntityEvent
++    {
++        public int newChunkX;
++        public int newChunkZ;
++        public int oldChunkX;
++        public int oldChunkZ;
++
++        public EnteringChunk(Entity var1, int var2, int var3, int var4, int var5)
++        {
++            super(var1);
++            this.newChunkX = var2;
++            this.newChunkZ = var3;
++            this.oldChunkX = var4;
++            this.oldChunkZ = var5;
++        }
++    }
++
+ }
+diff --git a/src/net/minecraftforge/event/entity/living/LivingEvent$LivingJumpEvent.java b/src/net/minecraftforge/event/entity/living/LivingEvent$LivingJumpEvent.java
+deleted file mode 100644
+index 2e31715..0000000
+--- a/src/net/minecraftforge/event/entity/living/LivingEvent$LivingJumpEvent.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.entity.living;
+-
+-import net.minecraft.server.EntityLiving;
+-
+-public class LivingEvent$LivingJumpEvent extends LivingEvent
+-{
+-    public LivingEvent$LivingJumpEvent(EntityLiving var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/living/LivingEvent$LivingUpdateEvent.java b/src/net/minecraftforge/event/entity/living/LivingEvent$LivingUpdateEvent.java
+deleted file mode 100644
+index d1c0cb7..0000000
+--- a/src/net/minecraftforge/event/entity/living/LivingEvent$LivingUpdateEvent.java
++++ /dev/null
+@@ -1,13 +0,0 @@
+-package net.minecraftforge.event.entity.living;
+-
+-import net.minecraft.server.EntityLiving;
+-import net.minecraftforge.event.Cancelable;
+-
+-@Cancelable
+-public class LivingEvent$LivingUpdateEvent extends LivingEvent
+-{
+-    public LivingEvent$LivingUpdateEvent(EntityLiving var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/living/LivingEvent.java b/src/net/minecraftforge/event/entity/living/LivingEvent.java
+index 462e105..e4b5243 100644
+--- a/src/net/minecraftforge/event/entity/living/LivingEvent.java
++++ b/src/net/minecraftforge/event/entity/living/LivingEvent.java
+@@ -1,6 +1,7 @@
+ package net.minecraftforge.event.entity.living;
+ 
+ import net.minecraft.server.EntityLiving;
++import net.minecraftforge.event.Cancelable;
+ import net.minecraftforge.event.entity.EntityEvent;
+ 
+ public class LivingEvent extends EntityEvent
+@@ -12,4 +13,21 @@ public class LivingEvent extends EntityEvent
+         super(var1);
+         this.entityLiving = var1;
+     }
++    
++    public static class LivingJumpEvent extends LivingEvent
++    {
++        public LivingJumpEvent(EntityLiving var1)
++        {
++            super(var1);
++        }
++    }
++    
++    @Cancelable
++    public static class LivingUpdateEvent extends LivingEvent
++    {
++        public LivingUpdateEvent(EntityLiving var1)
++        {
++            super(var1);
++        }
++    }
+ }
+diff --git a/src/net/minecraftforge/event/entity/player/BonemealEvent.java b/src/net/minecraftforge/event/entity/player/BonemealEvent.java
+index 177104b..142f1ad 100644
+--- a/src/net/minecraftforge/event/entity/player/BonemealEvent.java
++++ b/src/net/minecraftforge/event/entity/player/BonemealEvent.java
+@@ -3,10 +3,10 @@ package net.minecraftforge.event.entity.player;
+ import net.minecraft.server.EntityHuman;
+ import net.minecraft.server.World;
+ import net.minecraftforge.event.Cancelable;
+-import net.minecraftforge.event.Event$HasResult;
++import net.minecraftforge.event.Event;
+ 
+ @Cancelable
+-@Event$HasResult
++@Event.HasResult
+ public class BonemealEvent extends PlayerEvent
+ {
+     public final World world;
+diff --git a/src/net/minecraftforge/event/entity/player/EntityItemPickupEvent.java b/src/net/minecraftforge/event/entity/player/EntityItemPickupEvent.java
+index cdb4e0f..31d758b 100644
+--- a/src/net/minecraftforge/event/entity/player/EntityItemPickupEvent.java
++++ b/src/net/minecraftforge/event/entity/player/EntityItemPickupEvent.java
+@@ -3,10 +3,10 @@ package net.minecraftforge.event.entity.player;
+ import net.minecraft.server.EntityHuman;
+ import net.minecraft.server.EntityItem;
+ import net.minecraftforge.event.Cancelable;
+-import net.minecraftforge.event.Event$HasResult;
++import net.minecraftforge.event.Event;
+ 
+ @Cancelable
+-@Event$HasResult
++@Event.HasResult
+ public class EntityItemPickupEvent extends PlayerEvent
+ {
+     public final EntityItem item;
+diff --git a/src/net/minecraftforge/event/entity/player/FillBucketEvent.java b/src/net/minecraftforge/event/entity/player/FillBucketEvent.java
+index 8de42a1..e00a58e 100644
+--- a/src/net/minecraftforge/event/entity/player/FillBucketEvent.java
++++ b/src/net/minecraftforge/event/entity/player/FillBucketEvent.java
+@@ -5,10 +5,10 @@ import net.minecraft.server.ItemStack;
+ import net.minecraft.server.MovingObjectPosition;
+ import net.minecraft.server.World;
+ import net.minecraftforge.event.Cancelable;
+-import net.minecraftforge.event.Event$HasResult;
++import net.minecraftforge.event.Event;
+ 
+ @Cancelable
+-@Event$HasResult
++@Event.HasResult
+ public class FillBucketEvent extends PlayerEvent
+ {
+     public final ItemStack current;
+diff --git a/src/net/minecraftforge/event/entity/player/PlayerEvent$BreakSpeed.java b/src/net/minecraftforge/event/entity/player/PlayerEvent$BreakSpeed.java
+deleted file mode 100644
+index 65499f4..0000000
+--- a/src/net/minecraftforge/event/entity/player/PlayerEvent$BreakSpeed.java
++++ /dev/null
+@@ -1,23 +0,0 @@
+-package net.minecraftforge.event.entity.player;
+-
+-import net.minecraft.server.Block;
+-import net.minecraft.server.EntityHuman;
+-import net.minecraftforge.event.Cancelable;
+-
+-@Cancelable
+-public class PlayerEvent$BreakSpeed extends PlayerEvent
+-{
+-    public final Block block;
+-    public final int metadata;
+-    public final float originalSpeed;
+-    public float newSpeed = 0.0F;
+-
+-    public PlayerEvent$BreakSpeed(EntityHuman var1, Block var2, int var3, float var4)
+-    {
+-        super(var1);
+-        this.block = var2;
+-        this.metadata = var3;
+-        this.originalSpeed = var4;
+-        this.newSpeed = var4;
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/player/PlayerEvent$HarvestCheck.java b/src/net/minecraftforge/event/entity/player/PlayerEvent$HarvestCheck.java
+deleted file mode 100644
+index 3843523..0000000
+--- a/src/net/minecraftforge/event/entity/player/PlayerEvent$HarvestCheck.java
++++ /dev/null
+@@ -1,17 +0,0 @@
+-package net.minecraftforge.event.entity.player;
+-
+-import net.minecraft.server.Block;
+-import net.minecraft.server.EntityHuman;
+-
+-public class PlayerEvent$HarvestCheck extends PlayerEvent
+-{
+-    public final Block block;
+-    public boolean success;
+-
+-    public PlayerEvent$HarvestCheck(EntityHuman var1, Block var2, boolean var3)
+-    {
+-        super(var1);
+-        this.block = var2;
+-        this.success = var3;
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/entity/player/PlayerEvent.java b/src/net/minecraftforge/event/entity/player/PlayerEvent.java
+index 798043a..df363f4 100644
+--- a/src/net/minecraftforge/event/entity/player/PlayerEvent.java
++++ b/src/net/minecraftforge/event/entity/player/PlayerEvent.java
+@@ -1,6 +1,8 @@
+ package net.minecraftforge.event.entity.player;
+ 
++import net.minecraft.server.Block;
+ import net.minecraft.server.EntityHuman;
++import net.minecraftforge.event.Cancelable;
+ import net.minecraftforge.event.entity.living.LivingEvent;
+ 
+ public class PlayerEvent extends LivingEvent
+@@ -12,4 +14,36 @@ public class PlayerEvent extends LivingEvent
+         super(var1);
+         this.entityPlayer = var1;
+     }
++    
++    @Cancelable
++    public static class BreakSpeed extends PlayerEvent
++    {
++        public final Block block;
++        public final int metadata;
++        public final float originalSpeed;
++        public float newSpeed = 0.0F;
++
++        public BreakSpeed(EntityHuman var1, Block var2, int var3, float var4)
++        {
++            super(var1);
++            this.block = var2;
++            this.metadata = var3;
++            this.originalSpeed = var4;
++            this.newSpeed = var4;
++        }
++    }
++
++    public static class HarvestCheck extends PlayerEvent
++    {
++        public final Block block;
++        public boolean success;
++
++        public HarvestCheck(EntityHuman var1, Block var2, boolean var3)
++        {
++            super(var1);
++            this.block = var2;
++            this.success = var3;
++        }
++    }
++
+ }
+diff --git a/src/net/minecraftforge/event/entity/player/PlayerInteractEvent$Action.java b/src/net/minecraftforge/event/entity/player/PlayerInteractEvent$Action.java
+deleted file mode 100644
+index 33a1190..0000000
+--- a/src/net/minecraftforge/event/entity/player/PlayerInteractEvent$Action.java
++++ /dev/null
+@@ -1,8 +0,0 @@
+-package net.minecraftforge.event.entity.player;
+-
+-public enum PlayerInteractEvent$Action
+-{
+-    RIGHT_CLICK_AIR,
+-    RIGHT_CLICK_BLOCK,
+-    LEFT_CLICK_BLOCK;
+-}
+diff --git a/src/net/minecraftforge/event/entity/player/PlayerInteractEvent.java b/src/net/minecraftforge/event/entity/player/PlayerInteractEvent.java
+index ae58b7b..4fe23c5 100644
+--- a/src/net/minecraftforge/event/entity/player/PlayerInteractEvent.java
++++ b/src/net/minecraftforge/event/entity/player/PlayerInteractEvent.java
+@@ -2,25 +2,24 @@ package net.minecraftforge.event.entity.player;
+ 
+ import net.minecraft.server.EntityHuman;
+ import net.minecraftforge.event.Cancelable;
+-import net.minecraftforge.event.Event$Result;
+-import net.minecraftforge.event.entity.player.PlayerInteractEvent$Action;
++import net.minecraftforge.event.Event;
+ 
+ @Cancelable
+ public class PlayerInteractEvent extends PlayerEvent
+ {
+-    public final PlayerInteractEvent$Action action;
++    public final Action action;
+     public final int x;
+     public final int y;
+     public final int z;
+     public final int face;
+-    public Event$Result useBlock;
+-    public Event$Result useItem;
++    public Event.Result useBlock;
++    public Event.Result useItem;
+ 
+-    public PlayerInteractEvent(EntityHuman var1, PlayerInteractEvent$Action var2, int var3, int var4, int var5, int var6)
++    public PlayerInteractEvent(EntityHuman var1, Action var2, int var3, int var4, int var5, int var6)
+     {
+         super(var1);
+-        this.useBlock = Event$Result.DEFAULT;
+-        this.useItem = Event$Result.DEFAULT;
++        this.useBlock = Event.Result.DEFAULT;
++        this.useItem = Event.Result.DEFAULT;
+         this.action = var2;
+         this.x = var3;
+         this.y = var4;
+@@ -29,13 +28,21 @@ public class PlayerInteractEvent extends PlayerEvent
+ 
+         if (var6 == -1)
+         {
+-            this.useBlock = Event$Result.DENY;
++            this.useBlock = Event.Result.DENY;
+         }
+     }
+ 
+     public void setCanceled(boolean var1)
+     {
+-        this.useBlock = var1 ? Event$Result.DENY : (this.useBlock == Event$Result.DENY ? Event$Result.DEFAULT : this.useBlock);
+-        this.useItem = var1 ? Event$Result.DENY : (this.useItem == Event$Result.DENY ? Event$Result.DEFAULT : this.useItem);
++        this.useBlock = var1 ? Event.Result.DENY : (this.useBlock == Event.Result.DENY ? Event.Result.DEFAULT : this.useBlock);
++        this.useItem = var1 ? Event.Result.DENY : (this.useItem == Event.Result.DENY ? Event.Result.DEFAULT : this.useItem);
+     }
++    
++    public static enum Action
++    {
++        RIGHT_CLICK_AIR,
++        RIGHT_CLICK_BLOCK,
++        LEFT_CLICK_BLOCK;
++    }
++
+ }
+diff --git a/src/net/minecraftforge/event/entity/player/UseHoeEvent.java b/src/net/minecraftforge/event/entity/player/UseHoeEvent.java
+index 868f65f..b6f2005 100644
+--- a/src/net/minecraftforge/event/entity/player/UseHoeEvent.java
++++ b/src/net/minecraftforge/event/entity/player/UseHoeEvent.java
+@@ -4,10 +4,10 @@ import net.minecraft.server.EntityHuman;
+ import net.minecraft.server.ItemStack;
+ import net.minecraft.server.World;
+ import net.minecraftforge.event.Cancelable;
+-import net.minecraftforge.event.Event$HasResult;
++import net.minecraftforge.event.Event;
+ 
+ @Cancelable
+-@Event$HasResult
++@Event.HasResult
+ public class UseHoeEvent extends PlayerEvent
+ {
+     public final ItemStack current;
+diff --git a/src/net/minecraftforge/event/world/ChunkDataEvent$Load.java b/src/net/minecraftforge/event/world/ChunkDataEvent$Load.java
+deleted file mode 100644
+index 5239b09..0000000
+--- a/src/net/minecraftforge/event/world/ChunkDataEvent$Load.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.Chunk;
+-import net.minecraft.server.NBTTagCompound;
+-
+-public class ChunkDataEvent$Load extends ChunkDataEvent
+-{
+-    public ChunkDataEvent$Load(Chunk var1, NBTTagCompound var2)
+-    {
+-        super(var1, var2);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/ChunkDataEvent$Save.java b/src/net/minecraftforge/event/world/ChunkDataEvent$Save.java
+deleted file mode 100644
+index 36dec26..0000000
+--- a/src/net/minecraftforge/event/world/ChunkDataEvent$Save.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.Chunk;
+-import net.minecraft.server.NBTTagCompound;
+-
+-public class ChunkDataEvent$Save extends ChunkDataEvent
+-{
+-    public ChunkDataEvent$Save(Chunk var1, NBTTagCompound var2)
+-    {
+-        super(var1, var2);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/ChunkDataEvent.java b/src/net/minecraftforge/event/world/ChunkDataEvent.java
+index b459831..302d6a4 100644
+--- a/src/net/minecraftforge/event/world/ChunkDataEvent.java
++++ b/src/net/minecraftforge/event/world/ChunkDataEvent.java
+@@ -17,4 +17,20 @@ public class ChunkDataEvent extends ChunkEvent
+     {
+         return this.data;
+     }
++    
++    public static class Load extends ChunkDataEvent
++    {
++        public Load(Chunk var1, NBTTagCompound var2)
++        {
++            super(var1, var2);
++        }
++    }
++
++    public static class Save extends ChunkDataEvent
++    {
++        public Save(Chunk var1, NBTTagCompound var2)
++        {
++            super(var1, var2);
++        }
++    }
+ }
+diff --git a/src/net/minecraftforge/event/world/ChunkEvent$Load.java b/src/net/minecraftforge/event/world/ChunkEvent$Load.java
+deleted file mode 100644
+index 565d3ac..0000000
+--- a/src/net/minecraftforge/event/world/ChunkEvent$Load.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.Chunk;
+-
+-public class ChunkEvent$Load extends ChunkEvent
+-{
+-    public ChunkEvent$Load(Chunk var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/ChunkEvent$Unload.java b/src/net/minecraftforge/event/world/ChunkEvent$Unload.java
+deleted file mode 100644
+index b2c41a3..0000000
+--- a/src/net/minecraftforge/event/world/ChunkEvent$Unload.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.Chunk;
+-
+-public class ChunkEvent$Unload extends ChunkEvent
+-{
+-    public ChunkEvent$Unload(Chunk var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/ChunkEvent.java b/src/net/minecraftforge/event/world/ChunkEvent.java
+index 3c607b4..535a6b8 100644
+--- a/src/net/minecraftforge/event/world/ChunkEvent.java
++++ b/src/net/minecraftforge/event/world/ChunkEvent.java
+@@ -16,4 +16,22 @@ public class ChunkEvent extends WorldEvent
+     {
+         return this.chunk;
+     }
++    
++    public static class Load extends ChunkEvent
++    {
++        public Load(Chunk var1)
++        {
++            super(var1);
++        }
++    }
++    
++    public static class Unload extends ChunkEvent
++    {
++        public Unload(Chunk var1)
++        {
++            super(var1);
++        }
++    }
++
++
+ }
+diff --git a/src/net/minecraftforge/event/world/WorldEvent$Load.java b/src/net/minecraftforge/event/world/WorldEvent$Load.java
+deleted file mode 100644
+index d46a13e..0000000
+--- a/src/net/minecraftforge/event/world/WorldEvent$Load.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.World;
+-
+-public class WorldEvent$Load extends WorldEvent
+-{
+-    public WorldEvent$Load(World var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/WorldEvent$Save.java b/src/net/minecraftforge/event/world/WorldEvent$Save.java
+deleted file mode 100644
+index e82429d..0000000
+--- a/src/net/minecraftforge/event/world/WorldEvent$Save.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.World;
+-
+-public class WorldEvent$Save extends WorldEvent
+-{
+-    public WorldEvent$Save(World var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/WorldEvent$Unload.java b/src/net/minecraftforge/event/world/WorldEvent$Unload.java
+deleted file mode 100644
+index 4ecec45..0000000
+--- a/src/net/minecraftforge/event/world/WorldEvent$Unload.java
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package net.minecraftforge.event.world;
+-
+-import net.minecraft.server.World;
+-
+-public class WorldEvent$Unload extends WorldEvent
+-{
+-    public WorldEvent$Unload(World var1)
+-    {
+-        super(var1);
+-    }
+-}
+diff --git a/src/net/minecraftforge/event/world/WorldEvent.java b/src/net/minecraftforge/event/world/WorldEvent.java
+index d8ea1cd..aeba455 100644
+--- a/src/net/minecraftforge/event/world/WorldEvent.java
++++ b/src/net/minecraftforge/event/world/WorldEvent.java
+@@ -11,4 +11,28 @@ public class WorldEvent extends Event
+     {
+         this.world = var1;
+     }
++    
++    public static class Load extends WorldEvent
++    {
++        public Load(World var1)
++        {
++            super(var1);
++        }
++    }
++    
++    public static class Save extends WorldEvent
++    {
++        public Save(World var1)
++        {
++            super(var1);
++        }
++    }
++
++    public static class Unload extends WorldEvent
++    {
++        public Unload(World var1)
++        {
++            super(var1);
++        }
++    }
+ }
+diff --git a/src/net/minecraftforge/oredict/OreDictionary$OreRegisterEvent.java b/src/net/minecraftforge/oredict/OreDictionary$OreRegisterEvent.java
+deleted file mode 100644
+index 7077a0d..0000000
+--- a/src/net/minecraftforge/oredict/OreDictionary$OreRegisterEvent.java
++++ /dev/null
+@@ -1,16 +0,0 @@
+-package net.minecraftforge.oredict;
+-
+-import net.minecraft.server.ItemStack;
+-import net.minecraftforge.event.Event;
+-
+-public class OreDictionary$OreRegisterEvent extends Event
+-{
+-    public final String Name;
+-    public final ItemStack Ore;
+-
+-    public OreDictionary$OreRegisterEvent(String var1, ItemStack var2)
+-    {
+-        this.Name = var1;
+-        this.Ore = var2;
+-    }
+-}
+diff --git a/src/net/minecraftforge/oredict/OreDictionary.java b/src/net/minecraftforge/oredict/OreDictionary.java
+index ec2fa4f..2aabfe4 100644
+--- a/src/net/minecraftforge/oredict/OreDictionary.java
++++ b/src/net/minecraftforge/oredict/OreDictionary.java
+@@ -8,7 +8,7 @@ import net.minecraft.server.Block;
+ import net.minecraft.server.Item;
+ import net.minecraft.server.ItemStack;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.oredict.OreDictionary$OreRegisterEvent;
++import net.minecraftforge.event.Event;
+ 
+ public class OreDictionary
+ {
+@@ -143,11 +143,24 @@ public class OreDictionary
+         ArrayList var3 = getOres(Integer.valueOf(var1));
+         var2 = var2.cloneItemStack();
+         var3.add(var2);
+-        MinecraftForge.EVENT_BUS.post(new OreDictionary$OreRegisterEvent(var0, var2));
++        MinecraftForge.EVENT_BUS.post(new OreRegisterEvent(var0, var2));
+     }
+     
+     static
+     {
+         initVanillaEntries();
+     }
++    
++    public static class OreRegisterEvent extends Event
++    {
++        public final String Name;
++        public final ItemStack Ore;
++
++        public OreRegisterEvent(String var1, ItemStack var2)
++        {
++            this.Name = var1;
++            this.Ore = var2;
++        }
++    }
++
+ }
+diff --git a/src/org/bukkit/craftbukkit/CraftServer.java b/src/org/bukkit/craftbukkit/CraftServer.java
+index 2309db0..cac988b 100644
+--- a/src/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/org/bukkit/craftbukkit/CraftServer.java
+@@ -50,8 +50,7 @@ import net.minecraft.server.WorldSettings;
+ import net.minecraft.server.WorldType;
+ import net.minecraftforge.common.DimensionManager;
+ import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.world.WorldEvent$Load;
+-import net.minecraftforge.event.world.WorldEvent$Unload;
++import net.minecraftforge.event.world.WorldEvent;
+ 
+ import org.bukkit.Bukkit;
+ import org.bukkit.ChatColor;
+@@ -746,7 +745,7 @@ public final class CraftServer implements Server {
+         }
+         pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
+         
+-        MinecraftForge.EVENT_BUS.post(new WorldEvent$Load(internal));
++        MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(internal));
+         
+         return internal.getWorld();
+     }
