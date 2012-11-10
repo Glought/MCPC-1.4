@@ -46,6 +46,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.server.PacketListener;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.InventoryView;
 // CraftBukkit end
@@ -754,6 +755,30 @@ public class NetServerHandler extends NetHandler {
     }
 
     public void sendPacket(Packet packet) {
+
+    	if (packet != null) 
+    	{
+    		Player ply = this.player.getBukkitEntity();
+    		int packetID = packet.getId();
+
+    		Iterable<PacketListener> listeners = PacketListener.outgoingPacketListeners.get(Integer.valueOf(packetID));
+    		if (listeners != null) {
+    			for (PacketListener listener : listeners) {
+    				try {
+    					if (!listener.onOutgoingPacket(ply, packetID, packet)) {
+    						packet = null;
+    						break;
+    					}
+    				}
+    				catch (Exception e) {
+    					System.err.println("Caught exception in an outgoing PacketListener for packet " + packetID + ".");
+    							e.printStackTrace();
+    				}
+    			}
+    		}
+
+    	}
+
         if (packet instanceof Packet3Chat) {
             Packet3Chat packet3chat = (Packet3Chat) packet;
             int i = this.player.getChatFlags();

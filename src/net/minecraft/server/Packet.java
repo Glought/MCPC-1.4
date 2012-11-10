@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import sun.util.logging.resources.logging;
 
-public abstract class Packet {
+public abstract class Packet implements org.bukkit.event.server.Packet {
 
     public static IntHashMap l = new IntHashMap();
     private static Map a = new HashMap();
@@ -86,6 +86,12 @@ public abstract class Packet {
 
     public final int k() {
         return packetID; // ((Integer) a.get(this.getClass())).intValue(); // CraftBukkit
+    }
+    
+    @Override
+    public final int getId()
+    {
+    	return packetID;
     }
 
     public static Packet a(DataInputStream datainputstream, boolean flag, Socket socket) throws IOException { // CraftBukkit - throws IOException

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -134,6 +137,8 @@ import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MapMaker;
 
+import cpw.mods.fml.relauncher.RelaunchClassLoader;
+
 import org.bukkit.craftbukkit.libs.jline.console.ConsoleReader;
 
 public final class CraftServer implements Server {
@@ -230,6 +235,18 @@ public final class CraftServer implements Server {
         File pluginFolder = (File) console.options.valueOf("plugins");
 
         if (pluginFolder.exists()) {
+        	
+        	
+        	try 
+        	{
+        		for (File file : pluginFolder.listFiles()) 
+        		{
+        			((RelaunchClassLoader)getClass().getClassLoader()).addURL(file.toURI().toURL());
+        		}
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             Plugin[] plugins = pluginManager.loadPlugins(pluginFolder);
             for (Plugin plugin : plugins) {
                 try {

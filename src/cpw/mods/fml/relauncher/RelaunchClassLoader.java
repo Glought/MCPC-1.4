@@ -1,10 +1,16 @@
 package cpw.mods.fml.relauncher;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.cert.Certificate;
+import java.security.CodeSource;
+import java.security.Principal;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +33,7 @@ public class RelaunchClassLoader extends URLClassLoader
     private Set invalidClasses;
     private Set classLoaderExceptions = new HashSet();
     private Set transformerExceptions = new HashSet();
+    private Map<String, ProtectionDomain> cachedDomains;
 
     public RelaunchClassLoader(URL[] var1)
     {
@@ -34,6 +41,7 @@ public class RelaunchClassLoader extends URLClassLoader
         this.sources = new ArrayList(Arrays.asList(var1));
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap(1000);
+        this.cachedDomains = new HashMap<String, ProtectionDomain>();
         this.invalidClasses = new HashSet(1000);
         this.transformers = new ArrayList(2);
         Thread.currentThread().setContextClassLoader(this);
@@ -114,7 +122,7 @@ public class RelaunchClassLoader extends URLClassLoader
 
                                 byte[] var9 = this.getClassBytes(var1);
                                 byte[] var10 = this.runTransformers(var1, var9);
-                                Class var5 = this.defineClass(var1, var10, 0, var10.length);
+                                Class var5 = this.defineClass(var1, var10, 0, var10.length, getOrCreateDomain(var1));
                                 this.cachedClasses.put(var1, var5);
                                 return var5;
                             }
@@ -149,6 +157,41 @@ public class RelaunchClassLoader extends URLClassLoader
             return this.parent.loadClass(var1);
         }
     }
+    
+    private ProtectionDomain getOrCreateDomain(String var1)
+    {
+    	// /D:/Git/MCPC-1.4/bin/cpw/mods/fml/common/asm/transformers/MarkerTransformer.class
+    	// file:/D:/Git/MCPC-1.4/debug/mods/Mystcraft.jar!/xcompwiz/mystcraft/CommandCreateAgebook.class
+    	
+    	String var3 = this.findResource(var1.replace('.', '/').concat(".class")).getPath();
+    	
+    	int p = var3.indexOf("!");
+    	if (var3.contains("sqlite"))
+    	{
+    		int gg = 1;
+    		gg = gg + 2;
+    	}
+    	
+    	String v = null;
+		v = p > 0 ? var3.substring(0, p) : getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+    	
+		ProtectionDomain dm = cachedDomains.get(v);
+    	if (dm == null)
+    	{
+	    	URL path = null;
+	    	try
+	    	{
+				path = new URL(v);
+			} 
+	    	catch (MalformedURLException e) { e.printStackTrace(); }
+
+	    	dm = new ProtectionDomain(new CodeSource(path, (Certificate[])null), null, null, new Principal[0]);
+	    	
+	    	cachedDomains.put(v, dm);
+    	}
+    	
+    	return dm;
+    }
    
     public byte[] getClassBytes(String var1) throws IOException
     {
@@ -158,7 +201,7 @@ public class RelaunchClassLoader extends URLClassLoader
         try
         {
             URL var3 = this.findResource(var1.replace('.', '/').concat(".class"));
-
+            
             if (var3 == null)
             {
                 Object var14 = null;
