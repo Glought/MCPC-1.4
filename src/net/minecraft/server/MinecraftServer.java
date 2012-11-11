@@ -195,10 +195,15 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
         WorldServer mainWorld = this.M() ? new DemoWorldServer(this, nbtManager, dataDir, 0, this.methodProfiler) : new WorldServer(this, nbtManager, dataDir, 0, settings, this.methodProfiler, Environment.getEnvironment(0), gen);
         Integer[] dimensions = DimensionManager.getStaticDimensionIDs();
 
+        String dDir = dataDir;
         for (int i = 0; i < dimensions.length; ++i)
         {
             int dimension = dimensions[i].intValue();
-            WorldServer world = dimension == 0 ? mainWorld : new SecondaryWorldServer(this, nbtManager, dataDir, dimension, settings, (WorldServer)mainWorld, this.methodProfiler, Environment.getEnvironment(dimension), gen);
+            
+            if (dimension == -1 || dimension == 1)
+            	dDir = dataDir + "_" + Environment.getEnvironment(dimension).toString().toLowerCase();
+            
+            WorldServer world = dimension == 0 ? mainWorld : new SecondaryWorldServer(this, new ServerNBTManager(this.server.getWorldContainer(), dDir, true), dDir, dimension, settings, (WorldServer)mainWorld, this.methodProfiler, Environment.getEnvironment(dimension), gen);
             world.worldProvider.setDimension(dimension);
             
             this.server.getPluginManager().callEvent(new org.bukkit.event.world.WorldInitEvent(world.getWorld()));
@@ -208,7 +213,6 @@ public abstract class MinecraftServer implements Runnable, IMojangStatistics, IC
             	world.getWorldData().setGameType(this.getGamemode());
 
             this.t.setPlayerFileData(new WorldServer[] { world });
-            this.worlds.add(world);
             
             MinecraftForge.EVENT_BUS.post(new WorldEvent$Load((World)world));
         }

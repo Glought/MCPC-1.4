@@ -166,7 +166,7 @@ public class RelaunchClassLoader extends URLClassLoader
     	String var3 = this.findResource(var1.replace('.', '/').concat(".class")).getPath();
     	
     	int p = var3.indexOf("!");
-    	if (var3.contains("sqlite"))
+    	if (var3.contains("Spawns"))
     	{
     		int gg = 1;
     		gg = gg + 2;
@@ -185,7 +185,7 @@ public class RelaunchClassLoader extends URLClassLoader
 			} 
 	    	catch (MalformedURLException e) { e.printStackTrace(); }
 
-	    	dm = new ProtectionDomain(new CodeSource(path, (Certificate[])null), null, null, new Principal[0]);
+	    	dm = new ProtectionDomain(new CodeSource(path, (Certificate[])null), null, this, new Principal[0]);
 	    	
 	    	cachedDomains.put(v, dm);
     	}

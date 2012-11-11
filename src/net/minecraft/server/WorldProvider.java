@@ -108,12 +108,6 @@ public abstract class WorldProvider
         return var5;
     }
 
-    @SideOnly(Side.CLIENT)
-    public int b(long var1, float var3)
-    {
-        return (int)(var1 / 24000L) % 8;
-    }
-
     /**
      * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
      */
@@ -157,10 +151,15 @@ public abstract class WorldProvider
     {
         this.dimension = var1;
     }
+    
+    public boolean isForgeOnlyWorld()
+    {
+    	return this.a instanceof SecondaryWorldServer && (this.dimension < -1 || this.dimension > 1);
+    }
 
     public String getSaveFolder()
     {
-        return this.a instanceof SecondaryWorldServer ? "DIM" + this.dimension : null;
+        return isForgeOnlyWorld() ? "DIM" + this.dimension : null;
     }
 
     public String getWelcomeMessage()

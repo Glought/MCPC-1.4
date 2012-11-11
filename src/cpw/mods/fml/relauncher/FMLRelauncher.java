@@ -31,7 +31,7 @@ public class FMLRelauncher
         instance().relaunchServer(var0);
     }
 
-    static FMLRelauncher instance()
+    public static FMLRelauncher instance()
     {
         if (INSTANCE == null)
         {
