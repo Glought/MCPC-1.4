@@ -166,12 +166,6 @@ public class RelaunchClassLoader extends URLClassLoader
     	String var3 = this.findResource(var1.replace('.', '/').concat(".class")).getPath();
     	
     	int p = var3.indexOf("!");
-    	if (var3.contains("Spawns"))
-    	{
-    		int gg = 1;
-    		gg = gg + 2;
-    	}
-    	
     	String v = null;
 		v = p > 0 ? var3.substring(0, p) : getClass().getProtectionDomain().getCodeSource().getLocation().toString();
     	
